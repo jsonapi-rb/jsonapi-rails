@@ -1,0 +1,16 @@
+<% module_namespacing do -%>
+class Serializable<%= class_name %> < JSONAPI::Serializable::Model
+  type '<%= type %>'
+
+<% attr_names.each do |attr| -%>
+  attribute :<%= attr %>
+<% end -%>
+
+<% has_one_rel_names.each do |rel| -%>
+  has_one :<%= rel %>
+<% end -%>
+<% has_many_rel_names.each do |rel| -%>
+  has_many :<%= rel %>
+<% end -%>
+end
+<% end -%>

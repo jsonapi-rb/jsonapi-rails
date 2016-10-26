@@ -1,0 +1,34 @@
+<% module_namespacing do -%>
+class Deserializable<%= class_name %> < JSONAPI::Deserializable::Resource
+  id
+
+<% attr_names.each do |attr| -%>
+  attribute :<%= attr %>
+<% end -%>
+
+<% has_one_rels.each do |reflection| -%>
+  has_one :<%= reflection.name %> do
+    field :<%= has_one_id_field_name(reflection.name) %> do |rel|
+      rel['data'] && rel['data']['id']
+    end
+<% if reflection.polymorphic? -%>
+    field :<%= has_one_type_field_name(reflection.name) %> do
+      rel['data'] && rel['data']['type']
+    end
+<% end -%>
+  end
+<% end -%>
+<% has_many_rels.each do |reflection| -%>
+  has_many :<%= reflection.name %> do
+    field :<%= has_many_id_field_name(reflection.name) %> do |rel|
+      rel['data'].map { |ri| ri['id'] }
+    end
+<% if reflection.polymorphic? -%>
+    field :<%= has_one_type_field_name(reflection.name) %> do
+      rel['data'].map { |ri| ri['type'] }
+    end
+<% end -%>
+  end
+<% end -%>
+end
+<% end -%>
