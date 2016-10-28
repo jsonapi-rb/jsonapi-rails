@@ -1,6 +1,7 @@
 require 'rails/railtie'
 require 'action_controller'
 require 'action_controller/railtie'
+require 'active_support'
 
 require 'jsonapi/rails/parser'
 require 'jsonapi/rails/render'
@@ -35,4 +36,8 @@ module JSONAPI
       end
     end
   end
+end
+
+ActiveSupport.on_load(:action_controller) do
+  include JSONAPI::Rails::ActionController
 end
