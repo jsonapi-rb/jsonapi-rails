@@ -39,5 +39,6 @@ module JSONAPI
 end
 
 ActiveSupport.on_load(:action_controller) do
+  require 'jsonapi/rails/action_controller'
   include JSONAPI::Rails::ActionController
 end
