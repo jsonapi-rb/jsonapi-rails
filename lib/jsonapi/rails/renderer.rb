@@ -4,44 +4,39 @@ require 'jsonapi/serializable/resource_builder'
 module JSONAPI
   module Rails
     class Renderer
-      # NOTE(beauby): It might be worth splitting this class into two,
-      #   with an ErrorRenderer.
       def self.render(resources, options)
         new(resources, options).render
       end
 
-      def self.render_errors(errors, options)
-        new(errors, options).render_errors
-      end
-
       def initialize(resources, options)
-        # TODO(beauby): handle explicit SerializableModel class via options.
-        # TODO(beauby): handle lightweight inference via :namespace option.
         # TODO(beauby): handle status option.
         @resources  = resources
         @options    = options.dup
+        @klass      = @options.delete(:class)
+        @namespace  = @options.delete(:namespace)
         @inferer    = @options.delete(:inferer)
         @exposures  = @options.delete(:expose) || {}
-        @exposures[:_resource_inferer] ||= @inferer
+        @exposures[:_resource_inferer] = namespace_inferer || @inferer
       end
 
       def render
-        JSONAPI.render(jsonapi_params.merge(data: jsonapi_resources))
-      end
-
-      def render_errors
-        # TODO(beauby): SerializableError inference on AR validation errors.
-        JSONAPI.render(jsonapi_params.merge(errors: jsonapi_resources))
+        JSONAPI.render(jsonapi_params.merge(data: jsonapi_resources)).to_json
       end
 
       private
 
-      def jsonapi_resources
-        ResourceBuilder.build(@resources, @exposures, @inferer)
+      def jsonapi_params
+        @options
       end
 
-      def jsonapi_params
-        @errors
+      def jsonapi_resources
+        toplevel_inferer = @klass || @inferer
+        ResourceBuilder.build(@resources, @exposures, toplevel_inferer)
+      end
+
+      def namespace_inferer
+        return nil unless @namespace
+        proc { |klass| "#{@namespace}::#{klass}" }
       end
 
       def exposures
@@ -50,6 +45,32 @@ module JSONAPI
 
       def default_exposures
         { url_helpers: ::Rails.application.routes.url_helpers }
+      end
+    end
+
+    class ErrorRenderer
+      def self.render(errors, options)
+        new(errors, options).render
+      end
+
+      def initialize(errors, options)
+        @errors    = errors
+        @options   = options.dup
+      end
+
+      def render
+        # TODO(beauby): SerializableError inference on AR validation errors.
+        JSONAPI.render(jsonapi_params.merge(errors: jsonapi_errors)).to_json
+      end
+
+      private
+
+      def jsonapi_params
+        @options
+      end
+
+      def jsonapi_errors
+        @errors
       end
     end
   end
