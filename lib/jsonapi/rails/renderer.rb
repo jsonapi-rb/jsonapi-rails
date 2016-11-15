@@ -3,6 +3,7 @@ require 'jsonapi/serializable/resource_builder'
 
 module JSONAPI
   module Rails
+    # TODO(beauby): Extract those classes to JSONAPI::Serializable::Renderer.
     class Renderer
       def self.render(resources, options)
         new(resources, options).render
@@ -31,7 +32,9 @@ module JSONAPI
 
       def jsonapi_resources
         toplevel_inferer = @klass || @inferer
-        ResourceBuilder.build(@resources, @exposures, toplevel_inferer)
+        JSONAPI::Serializable::ResourceBuilder.build(@resources,
+                                                     exposures,
+                                                     toplevel_inferer)
       end
 
       def namespace_inferer
