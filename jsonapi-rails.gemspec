@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'jsonapi-renderer',       '0.1.1.beta3'
   spec.add_dependency 'jsonapi-parser',         '0.1.1.beta3'
-  spec.add_dependency 'jsonapi-serializable',   '0.1.1.beta2'
+  spec.add_dependency 'jsonapi-serializable',   '0.1.1.beta3'
   spec.add_dependency 'jsonapi-deserializable', '0.1.1.beta3'
 
   spec.add_development_dependency 'activerecord', '>=5'
