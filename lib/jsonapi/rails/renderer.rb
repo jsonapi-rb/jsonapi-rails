@@ -36,7 +36,11 @@ module JSONAPI
 
       def namespace_inferer
         return nil unless @namespace
-        proc { |klass| "#{@namespace}::#{klass}" }
+        proc do |klass|
+          names = klass.name.split('::')
+          klass = names.pop
+          [@namespace, names, "Serializable#{klass}"].reject(&:nil?).join('::')
+        end
       end
 
       def exposures
