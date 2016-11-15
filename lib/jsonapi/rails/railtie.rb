@@ -4,7 +4,7 @@ require 'action_controller/railtie'
 require 'active_support'
 
 require 'jsonapi/rails/parser'
-require 'jsonapi/rails/rendering'
+require 'jsonapi/rails/renderer'
 
 module JSONAPI
   module Rails
@@ -22,7 +22,7 @@ module JSONAPI
 
         ActionController::Renderers.add :jsonapi do |json, options|
           unless json.is_a?(String)
-            json = JSONAPI::Rails.render(json, options).to_json
+            json = JSONAPI::Rails::Renderer.render(json, options).to_json
           end
           self.content_type ||= Mime[:jsonapi]
           self.response_body = json
@@ -30,7 +30,7 @@ module JSONAPI
 
         ActionController::Renderers.add :jsonapi_errors do |json, options|
           unless json.is_a?(String)
-            json = JSONAPI::Rails.render_errors(json, options).to_json
+            json = JSONAPI::Rails::Render.render_errors(json, options).to_json
           end
           self.content_type ||= Mime[:jsonapi]
           self.response_body = json
