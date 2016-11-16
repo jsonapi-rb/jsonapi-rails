@@ -23,7 +23,78 @@ $ gem install jsonapi-rails
 
 ## Usage
 
-TODO
+### Serialization
+
+Example:
+```ruby
+# app/serializable/serializable_user.rb
+class SerializableUser < JSONAPI::Serializable::Model
+  type 'users'
+
+  attribute :name
+  attribute :email do
+    "#{@model.name}@foo.bar"
+  end
+
+  has_many :posts do
+    # data is auto-inferred
+    link(:related) { @url_helpers.user_posts(@model) }
+    meta foo: :bar
+  end
+
+  has_many :comments do
+    data do
+      @user.comments.order(:desc)
+    end
+  end
+
+  has_many :reviews, Foo::Bar::SerializableRev
+
+  link(:self) { @url_helpers.user_url(@model.id) }
+  meta do
+    { foo: 'bar' }
+  end
+end
+
+# app/controllers/users_controller.rb
+# ...
+user = User.find_by(id: id)
+render jsonapi: user, include: { posts: [:comments] }, meta: { foo: 'bar' }
+# ...
+```
+
+### Deserialization
+
+Example:
+```ruby
+class PostsController < ActionController::Base
+  deserializable_resource :post, only: [:create, :update] do
+    attribute :title
+    attribute :date
+    has_one :author do |rel, id, type|
+      field user_id: id
+      field user_type: type
+    end
+    has_many :comments
+  end
+
+  def create_params
+    params.require(:user).permit!
+  end
+
+  def create
+    create_params[:title]
+    create_params[:date]
+    create_params[:comment_ids]
+    create_params[:comment_types]
+    create_params[:user_id]
+    create_params[:user_type]
+    # ...
+  end
+end
+
+
+```
 
 ## License
 
