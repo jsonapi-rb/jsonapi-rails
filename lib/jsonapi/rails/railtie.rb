@@ -4,16 +4,12 @@ require 'action_controller/railtie'
 require 'active_support'
 
 require 'jsonapi/rails/parser'
-require 'jsonapi/rails/render'
+require 'jsonapi/rails/renderer'
 
 module JSONAPI
   module Rails
     class Railtie < ::Rails::Railtie
       MEDIA_TYPE = 'application/vnd.api+json'.freeze
-      HEADERS = {
-        response: { 'CONTENT_TYPE'.freeze => MEDIA_TYPE },
-        request:  { 'ACCEPT'.freeze => MEDIA_TYPE }
-      }.freeze
       PARSER = JSONAPI::Rails.parser
 
       initializer 'JSONAPI::Rails.initialize' do
@@ -23,16 +19,22 @@ module JSONAPI
         else
           ActionDispatch::ParamsParser::DEFAULT_PARSERS[Mime[:jsonapi]] = PARSER
         end
+
         ActionController::Renderers.add :jsonapi do |json, options|
           unless json.is_a?(String)
-            json = JSONAPI::Rails.render(json, options)
-                                 .to_json(options)
+            json = JSONAPI::Rails::Renderer.render(json, options)
           end
           self.content_type ||= Mime[:jsonapi]
           self.response_body = json
         end
 
-        # TODO(beauby): Add renderer for `jsonapi_errors`.
+        ActionController::Renderers.add :jsonapi_errors do |json, options|
+          unless json.is_a?(String)
+            json = JSONAPI::Rails::ErrorRender.render_errors(json, options)
+          end
+          self.content_type ||= Mime[:jsonapi]
+          self.response_body = json
+        end
       end
     end
   end
