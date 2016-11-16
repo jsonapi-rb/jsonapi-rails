@@ -1,5 +1,4 @@
 require 'jsonapi/serializable/renderer'
-require 'jsonapi/serializable/resource_builder'
 
 module JSONAPI
   module Rails
