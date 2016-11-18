@@ -16,10 +16,6 @@ And then execute:
 ```
 $ bundle
 ```
-Or install it manually as:
-```
-$ gem install jsonapi-rails
-```
 
 ## Usage
 
@@ -28,29 +24,28 @@ $ gem install jsonapi-rails
 Example:
 ```ruby
 # app/serializable/serializable_user.rb
-class SerializableUser < JSONAPI::Serializable::Model
+class SerializableUser < JSONAPI::Serializable::Resource
   type 'users'
 
   attribute :name
   attribute :email do
-    "#{@model.name}@foo.bar"
+    "#{@object.name}@foo.bar"
   end
 
   has_many :posts do
-    # data is auto-inferred
-    link(:related) { @url_helpers.user_posts(@model) }
+    link(:related) { @url_helpers.user_posts(@object) }
     meta foo: :bar
   end
 
   has_many :comments do
-    data do
+    resources do
       @user.comments.order(:desc)
     end
   end
 
   has_many :reviews, Foo::Bar::SerializableRev
 
-  link(:self) { @url_helpers.user_url(@model.id) }
+  link(:self) { @url_helpers.user_url(@object.id) }
   meta do
     { foo: 'bar' }
   end
