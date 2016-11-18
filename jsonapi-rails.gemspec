@@ -14,13 +14,10 @@ Gem::Specification.new do |spec|
   spec.files         = Dir['README.md', 'lib/**/*']
   spec.require_path  = 'lib'
 
-  spec.add_dependency 'jsonapi-renderer',       '0.1.1.beta3'
-  spec.add_dependency 'jsonapi-parser',         '0.1.1.beta3'
-  spec.add_dependency 'jsonapi-serializable',   '0.1.1.beta3'
   spec.add_dependency 'jsonapi-deserializable', '0.1.1.beta3'
+  spec.add_dependency 'jsonapi-parser',         '0.1.1.beta3'
+  spec.add_dependency 'jsonapi-serializable',   '0.1.1.beta4'
 
-  spec.add_development_dependency 'activerecord', '>=5'
-  spec.add_development_dependency 'sqlite3',      '>= 1.3.12'
   spec.add_development_dependency 'rake',         '>=0.9'
   spec.add_development_dependency 'rspec',        '~>3.5'
 end

@@ -1,6 +1,3 @@
-require 'jsonapi/parser'
-require 'jsonapi/renderer'
-
 require 'jsonapi/deserializable'
 require 'jsonapi/serializable'
 
