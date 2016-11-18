@@ -7,26 +7,18 @@ class Deserializable<%= class_name %> < JSONAPI::Deserializable::Resource
 <% end -%>
 
 <% has_one_rels.each do |reflection| -%>
-  has_one :<%= reflection.name %> do
-    field :<%= has_one_id_field_name(reflection.name) %> do |rel|
-      rel['data'] && rel['data']['id']
-    end
+  has_one :<%= reflection.name %> do |rel, id, type|
+    field <%= has_one_id_field_name(reflection.name) %>: id
 <% if reflection.polymorphic? -%>
-    field :<%= has_one_type_field_name(reflection.name) %> do
-      rel['data'] && rel['data']['type']
-    end
+    field <%= has_one_type_field_name(reflection.name) %>: type
 <% end -%>
   end
 <% end -%>
 <% has_many_rels.each do |reflection| -%>
-  has_many :<%= reflection.name %> do
-    field :<%= has_many_id_field_name(reflection.name) %> do |rel|
-      rel['data'].map { |ri| ri['id'] }
-    end
+  has_many :<%= reflection.name %> do |rel, ids, types|
+    field <%= has_many_id_field_name(reflection.name) %>: ids
 <% if reflection.polymorphic? -%>
-    field :<%= has_one_type_field_name(reflection.name) %> do
-      rel['data'].map { |ri| ri['type'] }
-    end
+    field <%= has_one_type_field_name(reflection.name) %>: types
 <% end -%>
   end
 <% end -%>
