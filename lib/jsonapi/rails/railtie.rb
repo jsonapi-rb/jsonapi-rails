@@ -32,7 +32,7 @@ module JSONAPI
 
           ::ActionController::Renderers.add :jsonapi_errors do |json, options|
             unless json.is_a?(String)
-              json = JSONAPI::Rails::ErrorRender.render_errors(json, options)
+              json = JSONAPI::Rails::ErrorRenderer.render(json, options)
             end
             self.content_type ||= Mime[:jsonapi]
             self.response_body = json
