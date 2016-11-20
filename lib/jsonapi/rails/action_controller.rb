@@ -31,7 +31,8 @@ module JSONAPI
       end
 
       class DeserializationMiddleware
-        JSONAPI_KEYS = %w(data meta links jsonapi).freeze
+        REQUEST_PARAMETERS_KEY =
+          'action_dispatch.request.request_parameters'.freeze
         def initialize(app, key, klass)
           @app = app
           @deserializable_key = key
@@ -40,16 +41,12 @@ module JSONAPI
 
         def call(env)
           request = Rack::Request.new(env)
-          body = request.params.slice(*JSONAPI_KEYS)
+          body = JSON.parse(request.body.read)
           parser.parse!(body)
           deserialized_hash = @deserializable_class.call(body)
-          jsonapi = {}
-          JSONAPI_KEYS.each do |key|
-            next unless request.params.key?(key)
-            jsonapi[key.to_sym] = request.delete_param(key)
+          (env[REQUEST_PARAMETERS_KEY] ||= {}).tap do |request_parameters|
+            request_parameters[@deserializable_key] = deserialized_hash
           end
-          request.update_param(:_jsonapi, jsonapi)
-          request.update_param(@deserializable_key, deserialized_hash)
 
           @app.call(env)
         end
