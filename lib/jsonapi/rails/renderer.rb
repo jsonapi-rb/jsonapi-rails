@@ -18,8 +18,24 @@ module JSONAPI
 
     class ErrorRenderer
       def self.render(errors, options)
-        # TODO(beauby): SerializableError inference on AR validation errors.
+        if errors.is_a?(ActiveModel::Errors)
+          errors = build_active_model_errors(errors, options[:_jsonapi_mapping])
+        end
         JSONAPI::Serializable::ErrorRenderer.render(errors, options)
+      end
+
+      def self.build_active_model_errors(errors, mapping)
+        error_class = Class.new(JSONAPI::Serializable::Error) do
+          detail { @detail }
+          source do
+            path, name = @attribute
+            pointer "#{path}/#{name}"
+          end
+        end
+        errors.map! do |attr, error|
+          attr = mapping[attr]
+          error_class.new(attribute: attr, detail: error)
+        end
       end
     end
   end
