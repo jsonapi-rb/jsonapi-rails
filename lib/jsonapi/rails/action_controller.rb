@@ -7,6 +7,17 @@ module JSONAPI
       def self.included(base)
         base.class_eval do
           extend ClassMethods
+          prepend InstanceMethods
+        end
+      end
+
+      module InstanceMethods
+        def render(opts = {})
+          if opts.key?(:jsonapi_error)
+            mapping = params.to_unsafe_h[:_jsonapi_mapping]
+            opts = opts.merge(_jsonapi_mapping: mapping)
+          end
+          super(opts)
         end
       end
 
@@ -42,16 +53,23 @@ module JSONAPI
           request = Rack::Request.new(env)
           body = request.params.slice(*JSONAPI_KEYS)
           parser.parse!(body)
-          deserialized_hash = @deserializable_class.call(body)
+          deserialize!(request, body)
+
+          @app.call(env)
+        end
+
+        def deserialize!(request, body)
+          deserialized = @deserializable_class.new(body)
+          deserialized_hash = deserialized.to_h
+          mapping = deserialized.mapping
           jsonapi = {}
           JSONAPI_KEYS.each do |key|
             next unless request.params.key?(key)
             jsonapi[key.to_sym] = request.delete_param(key)
           end
           request.update_param(:_jsonapi, jsonapi)
+          request.update_param(:_jsonapi_mapping, mapping)
           request.update_param(@deserializable_key, deserialized_hash)
-
-          @app.call(env)
         end
       end
 
