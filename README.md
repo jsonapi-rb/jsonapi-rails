@@ -40,7 +40,7 @@ class SerializableUser < JSONAPI::Serializable::Resource
 
   has_many :comments do
     resources do
-      @user.comments.order(:desc)
+      @object.comments.order(:desc)
     end
   end
 
