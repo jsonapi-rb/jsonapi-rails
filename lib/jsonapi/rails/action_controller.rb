@@ -1,5 +1,4 @@
 require 'jsonapi/deserializable'
-require 'jsonapi/parser'
 
 module JSONAPI
   module Rails
@@ -11,26 +10,23 @@ module JSONAPI
       end
 
       module ClassMethods
-        def deserializable_resource(key, *args, &block)
-          klass = args.shift unless args.first.is_a?(Hash)
-          options = args.first || {}
-          if klass.nil?
-            klass = Class.new(JSONAPI::Deserializable::Resource, &block)
-          end
-          use DeserializeResource, key, klass, options
+        def deserializable_resource(key, options = {}, &block)
+          _deserializable(key, JSONAPI::Deserializable::Resource,
+                          options, &block)
         end
 
-        def deserializable_relationship(key, *args, &block)
-          klass = args.shift unless args.first.is_a?(Hash)
-          options = args.first || {}
-          if klass.nil?
-            klass = Class.new(JSONAPI::Deserializable::Relationship, &block)
-          end
-          use DeserializeResource, key, klass, options
+        def deserializable_relationship(key, options = {}, &block)
+          _deserializable(key, JSONAPI::Deserializable::Relationship,
+                          options, &block)
+        end
+
+        def _deserializable(key, base_class, options, &block)
+          klass = options[:class] || Class.new(base_class, &block)
+          use Deserialization, key, klass, options
         end
       end
 
-      class DeserializationMiddleware
+      class Deserialization
         REQUEST_PARAMETERS_KEY =
           'action_dispatch.request.request_parameters'.freeze
         def initialize(app, key, klass)
@@ -42,25 +38,11 @@ module JSONAPI
         def call(env)
           request = Rack::Request.new(env)
           body = JSON.parse(request.body.read)
-          parser.parse!(body)
           deserialized_hash = @deserializable_class.call(body)
-          (env[REQUEST_PARAMETERS_KEY] ||= {}).tap do |request_parameters|
-            request_parameters[@deserializable_key] = deserialized_hash
-          end
+          env[REQUEST_PARAMETERS_KEY] ||= {}
+          env[REQUEST_PARAMETERS_KEY][@deserializable_key] = deserialized_hash
 
           @app.call(env)
-        end
-      end
-
-      class DeserializeResource < DeserializationMiddleware
-        def parser
-          JSONAPI::Parser::Resource
-        end
-      end
-
-      class DeserializeRelationship < DeserializationMiddleware
-        def parser
-          JSONAPI::Parser::Relationship
         end
       end
     end
