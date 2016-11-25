@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'jsonapi-rb integrations for Rails.'
   spec.description   = 'Efficient, convenient, non-intrusive JSONAPI ' \
                        'framework for Rails.'
-  spec.homepage      = 'https://github.com/jsonapi-rb/rails'
+  spec.homepage      = 'https://github.com/jsonapi-rb/jsonapi-rails'
   spec.license       = 'MIT'
 
   spec.files         = Dir['README.md', 'lib/**/*']
