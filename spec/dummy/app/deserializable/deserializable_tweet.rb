@@ -1,8 +1,4 @@
 class DeserializableTweet < JSONAPI::Deserializable::Resource
-  id
-
-  attribute :content
-
   has_one :parent do |rel, id, type|
     field parent_id: id
   end

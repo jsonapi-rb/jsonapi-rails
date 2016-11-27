@@ -9,7 +9,11 @@ module JSONAPI
   module Rails
     class Railtie < ::Rails::Railtie
       MEDIA_TYPE = 'application/vnd.api+json'.freeze
-      PARSER = JSONAPI::Rails.parser
+      PARSER = JSONAPI::Rails.parser.freeze
+      RENDERERS = {
+        jsonapi: JSONAPI::Rails.success_renderer,
+        jsonapi_errors: JSONAPI::Rails.error_renderer
+      }.freeze
 
       initializer 'jsonapi-rails.action_controller' do
         ActiveSupport.on_load(:action_controller) do
@@ -23,20 +27,8 @@ module JSONAPI
             ::ActionDispatch::ParamsParser::DEFAULT_PARSERS[Mime[:jsonapi]] = PARSER
           end
 
-          ::ActionController::Renderers.add :jsonapi do |json, options|
-            unless json.is_a?(String)
-              json = JSONAPI::Rails::Renderer.render(json, options)
-            end
-            self.content_type ||= Mime[:jsonapi]
-            self.response_body = json
-          end
-
-          ::ActionController::Renderers.add :jsonapi_errors do |json, options|
-            unless json.is_a?(String)
-              json = JSONAPI::Rails::ErrorRender.render_errors(json, options)
-            end
-            self.content_type ||= Mime[:jsonapi]
-            self.response_body = json
+          RENDERERS.each do |key, renderer|
+            ::ActionController::Renderers.add(key, &renderer)
           end
         end
       end
