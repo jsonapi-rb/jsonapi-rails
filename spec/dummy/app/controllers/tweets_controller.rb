@@ -1,5 +1,6 @@
 class TweetsController < ActionController::Base
-  deserializable_resource :tweet, DeserializableTweet, only: [:create, :update]
+  deserializable_resource :tweet, class: DeserializableTweet,
+                          only: [:create, :update]
 
   def index
     tweets = Tweet.all
