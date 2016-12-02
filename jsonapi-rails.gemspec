@@ -16,9 +16,9 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'jsonapi-rb', '0.1.1'
 
-  spec.add_development_dependency 'rails', '~> 5.0.0'
+  spec.add_development_dependency 'rails', '~> 5.0'
   spec.add_development_dependency 'sqlite3'
   spec.add_development_dependency 'rake',        '~> 11.3'
   spec.add_development_dependency 'rspec-rails', '~> 3.5'
-  spec.add_development_dependency 'dry-validation', '~> 0.10.3'
+  spec.add_development_dependency 'dry-validation', '~> 0.10'
 end
