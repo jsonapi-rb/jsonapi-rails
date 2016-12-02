@@ -10,6 +10,7 @@ module JSONAPI
           url_helpers: ::Rails.application.routes.url_helpers
         }
         opts[:expose] = default_exposures.merge!(opts[:expose] || {})
+        opts[:jsonapi] = opts.delete(:jsonapi_object)
 
         JSONAPI::Serializable::Renderer.render(resources, opts)
       end
