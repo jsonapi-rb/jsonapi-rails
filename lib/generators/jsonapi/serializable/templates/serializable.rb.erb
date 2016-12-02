@@ -1,11 +1,9 @@
 <% module_namespacing do -%>
 class Serializable<%= class_name %> < JSONAPI::Serializable::Resource
   type '<%= type %>'
-
 <% attr_names.each do |attr| -%>
   attribute :<%= attr %>
 <% end -%>
-
 <% has_one_rel_names.each do |rel| -%>
   has_one :<%= rel %>
 <% end -%>
