@@ -4,7 +4,12 @@ class TweetsController < ActionController::Base
   def index
     tweets = Tweet.all
 
-    render jsonapi: tweets
+    render jsonapi: tweets,
+           jsonapi_object: { version: '1.0' },
+           meta: { foo: 'bar' },
+           links: {
+             self: 'http://foo.bar'
+           }
   end
 
   def show
