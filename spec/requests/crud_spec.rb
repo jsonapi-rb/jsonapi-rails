@@ -24,6 +24,14 @@ RSpec.describe 'Basic CRUD', type: :request do
         type: 'tweets',
         attributes: {
           content: 'foo'
+        },
+        relationships: {
+          author: {
+            data: {
+              id: 'foo',
+              type: 'bar'
+            }
+          }
         }
       }
     }
