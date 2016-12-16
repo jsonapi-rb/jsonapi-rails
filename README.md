@@ -7,6 +7,12 @@ Rails integration for [jsonapi-rb](http://jsonapi-rb.org).
 [![Build Status](https://secure.travis-ci.org/jsonapi-rb/jsonapi-rails.svg?branch=master)](http://travis-ci.org/jsonapi-rb/jsonapi-rails?branch=master)
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/jsonapi-rb/Lobby)
 
+## Resources
+
+* Chat: [gitter](http://gitter.im/jsonapi-rb)
+* Twitter: [@jsonapirb](http://twitter.com/jsonapirb)
+* Docs: [jsonapi-rb.org](http://jsonapi-rb.org)
+
 ## Installation
 
 Add the following to your application's Gemfile:
