@@ -21,6 +21,8 @@ class TweetsController < ActionController::Base
   def create
     tweet = Tweet.new(create_params.merge(author: current_user))
 
+    p request.env['jsonapi_deserializable.reverse_mapping']
+
     unless tweet.save
       render jsonapi_errors: tweet.errors
       return

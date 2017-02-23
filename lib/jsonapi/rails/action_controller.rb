@@ -4,10 +4,17 @@ require 'jsonapi/parser'
 module JSONAPI
   module Rails
     module ActionController
-      def self.included(base)
+      REVERSE_MAPPING_KEY = 'jsonapi_deserializable.reverse_mapping'.freeze
+
+      def self.prepended(base)
         base.class_eval do
           extend ClassMethods
         end
+      end
+
+      def render(options = {})
+        reverse_mapping = request.env[REVERSE_MAPPING_KEY]
+        super(options.merge(_reverse_mapping: reverse_mapping))
       end
 
       module ClassMethods
@@ -41,9 +48,10 @@ module JSONAPI
         def call(env)
           request = Rack::Request.new(env)
           body = JSON.parse(request.body.read)
-          deserialized_hash = @deserializable_class.call(body)
+          deserializable = @deserializable_class.new(body)
+          env[REVERSE_MAPPING_KEY] = deserializable.reverse_mapping
           (env[REQUEST_PARAMETERS_KEY] ||= {}).tap do |request_parameters|
-            request_parameters[@deserializable_key] = deserialized_hash
+            request_parameters[@deserializable_key] = deserializable.to_hash
           end
 
           @app.call(env)
