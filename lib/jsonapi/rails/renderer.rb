@@ -1,3 +1,4 @@
+require 'jsonapi/rails/active_model_errors'
 require 'jsonapi/serializable/renderer'
 
 module JSONAPI
@@ -34,6 +35,15 @@ module JSONAPI
       def render(errors, options, controller)
         options = options.merge(_jsonapi_pointers: controller.jsonapi_pointers)
         # TODO(beauby): SerializableError inference on AR validation errors.
+
+        errors = [errors] unless errors.is_a?(Array)
+        errors = errors.flat_map do |error|
+          if error.is_a?(ActiveModel::Errors)
+            ActiveModelErrors.new(error, options[:_jsonapi_pointers]).to_a
+          else
+            error
+          end
+        end
 
         @renderer.render(errors, options)
       end

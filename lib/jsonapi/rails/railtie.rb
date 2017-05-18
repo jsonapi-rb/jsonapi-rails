@@ -13,7 +13,7 @@ module JSONAPI
       MEDIA_TYPE = 'application/vnd.api+json'.freeze
       RENDERERS = {
         jsonapi:       SuccessRenderer.new,
-        jsonapi_error: ErrorsRenderer.new
+        jsonapi_errors: ErrorsRenderer.new
       }.freeze
 
       initializer 'jsonapi.init', after: :load_config_initializers do
