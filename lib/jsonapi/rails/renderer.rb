@@ -21,10 +21,12 @@ module JSONAPI
       def self.render(errors, options)
         errors = [errors] unless errors.is_a?(Array)
         errors = errors.flat_map do |error|
-          if error.is_a?(ActiveModel::Errors)
+          if error.respond_to?(:as_jsonapi)
+            error
+          elsif error.is_a?(ActiveModel::Errors)
             ActiveModelErrors.new(error, options[:_reverse_mapping]).to_a
           else
-            error
+            raise # TODO(lucas): Raise meaningful exception.
           end
         end
 
