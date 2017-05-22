@@ -25,6 +25,8 @@ module JSONAPI
             error
           elsif error.is_a?(ActiveModel::Errors)
             ActiveModelErrors.new(error, options[:_reverse_mapping]).to_a
+          elsif error.is_a?(Hash)
+            JSONAPI::Serializable::Error.create(error)
           else
             raise # TODO(lucas): Raise meaningful exception.
           end
