@@ -6,11 +6,6 @@ module JSONAPI
     module ActionController
       REVERSE_MAPPING_KEY = 'jsonapi_deserializable.reverse_mapping'.freeze
 
-      def self.prepended(base)
-        base.class_eval do
-          extend ClassMethods
-        end
-      end
       module ClassMethods
         def deserializable_resource(key, options = {}, &block)
           _deserializable(key, options,
