@@ -9,7 +9,6 @@ module JSONAPI
   module Rails
     class Railtie < ::Rails::Railtie
       MEDIA_TYPE = 'application/vnd.api+json'.freeze
-      PARSER = JSONAPI::Rails.parser
       RENDERERS = {
         jsonapi:       JSONAPI::Rails.rails_renderer(SuccessRenderer),
         jsonapi_error: JSONAPI::Rails.rails_renderer(ErrorRenderer)

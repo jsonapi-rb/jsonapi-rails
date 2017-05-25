@@ -1,13 +1,12 @@
+require 'jsonapi/deserializable'
+
 module JSONAPI
   module Rails
-    module_function
+    PARSER = lambda do |body|
+      data = JSON.parse(body)
+      hash = { _jsonapi: data }
 
-    def parser
-      lambda do |body|
-        data = JSON.parse(body)
-        data = { _json: data } unless data.is_a?(Hash)
-        data.with_indifferent_access
-      end
+      hash.with_indifferent_access
     end
   end
 end
