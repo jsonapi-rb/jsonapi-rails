@@ -4,6 +4,8 @@ require 'jsonapi/parser'
 module JSONAPI
   module Rails
     module ActionController
+      extend ActiveSupport::Concern
+
       REVERSE_MAPPING_KEY = 'jsonapi_deserializable.reverse_mapping'.freeze
 
       module ClassMethods
@@ -29,6 +31,12 @@ module JSONAPI
             controller.params[key.to_sym] = resource.to_hash
           end
         end
+      end
+
+      private
+
+      def jsonapi_pointers
+        request.env[REVERSE_MAPPING_KEY]
       end
     end
   end

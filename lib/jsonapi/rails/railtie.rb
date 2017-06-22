@@ -17,7 +17,7 @@ module JSONAPI
       initializer 'jsonapi-rails.action_controller' do
         ActiveSupport.on_load(:action_controller) do
           require 'jsonapi/rails/action_controller'
-          extend ::JSONAPI::Rails::ActionController::ClassMethods
+          include ::JSONAPI::Rails::ActionController
 
           Mime::Type.register MEDIA_TYPE, :jsonapi
 
@@ -35,9 +35,8 @@ module JSONAPI
 
           ::ActionController::Renderers.add(:jsonapi_error) do |errors, options|
             # Renderer proc is evaluated in the controller context, so it
-            # has access to the request object.
-            reverse_mapping = request.env[ActionController::REVERSE_MAPPING_KEY]
-            options = options.merge(_reverse_mapping: reverse_mapping)
+            # has access to the jsonapi_pointers method.
+            options = options.merge(_jsonapi_pointers: jsonapi_pointers)
             self.content_type ||= Mime[:jsonapi]
 
             RENDERERS[:jsonapi_error].render(errors, options).to_json
