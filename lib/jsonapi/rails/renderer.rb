@@ -1,4 +1,4 @@
-require 'jsonapi/rails/active_model_errors'
+require 'jsonapi/rails/active_model_error'
 require 'jsonapi/serializable/renderer'
 
 module JSONAPI
@@ -24,7 +24,7 @@ module JSONAPI
           if error.respond_to?(:as_jsonapi)
             error
           elsif error.is_a?(ActiveModel::Errors)
-            ActiveModelErrors.new(error, options[:_reverse_mapping]).to_a
+            ActiveModelError.from_errors(error, options[:_reverse_mapping]).to_a
           elsif error.is_a?(Hash)
             JSONAPI::Serializable::Error.create(error)
           else

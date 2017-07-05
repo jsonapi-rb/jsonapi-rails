@@ -1,6 +1,7 @@
 require 'rails/railtie'
 require 'action_controller'
 require 'active_support'
+require 'active_model'
 
 require 'jsonapi/rails/parser'
 require 'jsonapi/rails/renderer'

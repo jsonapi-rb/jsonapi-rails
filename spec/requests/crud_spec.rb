@@ -96,4 +96,28 @@ RSpec.describe 'Basic CRUD', type: :request do
     expect(response.body).to be_valid_jsonapi
     expect(body['data'].first).to eq(second_tweet['data'])
   end
+
+  it 'renders errors when trying to create an invalid tweet' do
+    # Post an invalid tweet
+    params = {
+      data: {
+        type: 'tweets',
+        attributes: {}
+      }
+    }
+    post '/tweets',
+         params: params,
+         as: :json,
+         headers: headers.merge('CONTENT_TYPE' => 'application/vnd.api+json')
+    expect(response).to have_http_status(422)
+    expect(response.body).to be_valid_jsonapi
+    expect(response.body).to match_schema do
+      required(:errors).each do
+        required(:title).value(eql?: 'Invalid content')
+        required(:detail).value(eql?: "Content can't be blank")
+        required(:source).value(:hash?)
+        required(:source).value(:empty?)
+      end
+    end
+  end
 end

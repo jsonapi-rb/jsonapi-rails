@@ -24,7 +24,7 @@ class TweetsController < ActionController::Base
     p request.env['jsonapi_deserializable.reverse_mapping']
 
     unless tweet.save
-      render jsonapi_errors: tweet.errors
+      render jsonapi_errors: tweet.errors, status: :unprocessable_entity
       return
     end
 
