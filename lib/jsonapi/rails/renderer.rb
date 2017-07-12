@@ -32,7 +32,7 @@ module JSONAPI
         # has access to the request object.
         reverse_mapping = request.env[ActionController::REVERSE_MAPPING_KEY]
         options = options.merge(_reverse_mapping: reverse_mapping)
-        json = renderer.render(json, options) unless json.is_a?(String)
+        json = renderer.render(json, options).to_json unless json.is_a?(String)
         self.content_type ||= Mime[:jsonapi]
         self.response_body = json
       end
