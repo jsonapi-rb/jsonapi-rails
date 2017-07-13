@@ -5,6 +5,8 @@ module JSONAPI
     class SuccessRenderer
       def initialize(renderer = JSONAPI::Serializable::SuccessRenderer.new)
         @renderer = renderer
+
+        freeze
       end
 
       def render(resources, options)
@@ -20,29 +22,16 @@ module JSONAPI
       end
     end
 
-    class ErrorRenderer
+    class ErrorsRenderer
       def initialize(renderer = JSONAPI::Serializable::ErrorsRenderer.new)
         @renderer = renderer
+
+        freeze
       end
 
       def render(errors, options)
         # TODO(beauby): SerializableError inference on AR validation errors.
         @renderer.render(errors, options)
-      end
-    end
-
-    module_function
-
-    # @api private
-    def rails_renderer(renderer)
-      proc do |json, options|
-        # Renderer proc is evaluated in the controller context, so it
-        # has access to the request object.
-        reverse_mapping = request.env[ActionController::REVERSE_MAPPING_KEY]
-        options = options.merge(_reverse_mapping: reverse_mapping)
-        json = renderer.render(json, options).to_json unless json.is_a?(String)
-        self.content_type ||= Mime[:jsonapi]
-        self.response_body = json
       end
     end
   end
