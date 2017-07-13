@@ -10,8 +10,8 @@ module JSONAPI
     class Railtie < ::Rails::Railtie
       MEDIA_TYPE = 'application/vnd.api+json'.freeze
       RENDERERS = {
-        jsonapi:       JSONAPI::Rails.rails_renderer(SuccessRenderer),
-        jsonapi_error: JSONAPI::Rails.rails_renderer(ErrorRenderer)
+        jsonapi:       SuccessRenderer.new,
+        jsonapi_error: ErrorsRenderer.new
       }.freeze
 
       initializer 'jsonapi-rails.action_controller' do
@@ -27,8 +27,20 @@ module JSONAPI
             ::ActionDispatch::ParamsParser::DEFAULT_PARSERS[Mime[:jsonapi]] = PARSER
           end
 
-          RENDERERS.each do |key, renderer|
-            ::ActionController::Renderers.add(key, &renderer)
+          ::ActionController::Renderers.add(:jsonapi) do |resources, options|
+            self.content_type ||= Mime[:jsonapi]
+
+            RENDERERS[:jsonapi].render(resources, options).to_json
+          end
+
+          ::ActionController::Renderers.add(:jsonapi_error) do |errors, options|
+            # Renderer proc is evaluated in the controller context, so it
+            # has access to the request object.
+            reverse_mapping = request.env[ActionController::REVERSE_MAPPING_KEY]
+            options = options.merge(_reverse_mapping: reverse_mapping)
+            self.content_type ||= Mime[:jsonapi]
+
+            RENDERERS[:jsonapi_error].render(errors, options).to_json
           end
 
           JSONAPI::Deserializable::Resource.configure do |config|
