@@ -1,19 +1,17 @@
 require 'rails_helper'
 
-RSpec.describe JSONAPI::Rails::ActionController do
-  class TestController < ActionController::Base
-    deserializable_resource "things"
-  end
+RSpec.describe ActionController::Base do
+  it 'exposes the deserialization mapping via the jsonapi_pointers method' do
+    pointers = { id: '/data/id', type: '/data/type' }
 
-  let(:controller) { TestController.new }
-
-  context 'source pointers' do
-    it 'should fetch the mapping created during deserialization' do
-      reverse_mapping = {id: "/data/id", type: "/data/type"}
-      allow(controller).to receive(:request) do
-        OpenStruct.new(env: {'jsonapi_deserializable.reverse_mapping' => reverse_mapping})
-      end
-      expect(controller.send(:jsonapi_pointers)).to equal reverse_mapping
+    allow(subject).to receive(:request) do
+      OpenStruct.new(
+        env: {
+          JSONAPI::Rails::ActionController::JSONAPI_POINTERS_KEY => pointers
+        }
+      )
     end
+
+    expect(subject.send(:jsonapi_pointers)).to equal pointers
   end
 end
