@@ -10,8 +10,8 @@ module JSONAPI
     class Railtie < ::Rails::Railtie
       MEDIA_TYPE = 'application/vnd.api+json'.freeze
       RENDERERS = {
-        jsonapi:       JSONAPI::Rails.rails_renderer(SuccessRenderer),
-        jsonapi_error: JSONAPI::Rails.rails_renderer(ErrorRenderer)
+        jsonapi:       JSONAPI::Rails.rails_renderer(SuccessRenderer.new),
+        jsonapi_error: JSONAPI::Rails.rails_renderer(ErrorRenderer.new)
       }.freeze
 
       initializer 'jsonapi-rails.action_controller' do

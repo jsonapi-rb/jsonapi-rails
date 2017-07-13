@@ -3,7 +3,11 @@ require 'jsonapi/serializable/renderer'
 module JSONAPI
   module Rails
     class SuccessRenderer
-      def self.render(resources, options)
+      def initialize(renderer = JSONAPI::Serializable::SuccessRenderer.new)
+        @renderer = renderer
+      end
+
+      def render(resources, options)
         opts = options.dup
         # TODO(beauby): Move this to a global configuration.
         default_exposures = {
@@ -12,14 +16,18 @@ module JSONAPI
         opts[:expose] = default_exposures.merge!(opts[:expose] || {})
         opts[:jsonapi] = opts.delete(:jsonapi_object)
 
-        JSONAPI::Serializable::Renderer.render(resources, opts)
+        @renderer.render(resources, opts)
       end
     end
 
     class ErrorRenderer
-      def self.render(errors, options)
+      def initialize(renderer = JSONAPI::Serializable::ErrorsRenderer.new)
+        @renderer = renderer
+      end
+
+      def render(errors, options)
         # TODO(beauby): SerializableError inference on AR validation errors.
-        JSONAPI::Serializable::ErrorRenderer.render(errors, options)
+        @renderer.render(errors, options)
       end
     end
 
