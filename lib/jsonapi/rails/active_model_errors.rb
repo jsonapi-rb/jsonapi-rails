@@ -21,7 +21,7 @@ module JSONAPI
     class ActiveModelErrors
       def initialize(errors, reverse_mapping)
         @errors = errors
-        @reverse_mapping = reverse_mapping
+        @reverse_mapping = reverse_mapping || {}
 
         freeze
       end
