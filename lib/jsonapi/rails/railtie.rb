@@ -30,11 +30,13 @@ module JSONAPI
           ::ActionController::Renderers.add(:jsonapi) do |resources, options|
             self.content_type ||= Mime[:jsonapi]
 
+            options = options.dup
             # Renderer proc is evaluated in the controller context.
             if (pagination_links = jsonapi_pagination(resources))
               (options[:links] ||= {}).merge!(pagination_links)
             end
-            options[:expose] = jsonapi_expose.merge!(options[:expose] || {})
+            options[:expose]  = jsonapi_expose.merge!(options[:expose] || {})
+            options[:jsonapi] = options[:jsonapi_object] || jsonapi_object
 
             RENDERERS[:jsonapi].render(resources, options).to_json
           end

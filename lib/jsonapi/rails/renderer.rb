@@ -10,10 +10,7 @@ module JSONAPI
       end
 
       def render(resources, options)
-        opts = options.dup
-        opts[:jsonapi] = opts.delete(:jsonapi_object)
-
-        @renderer.render(resources, opts)
+        @renderer.render(resources, options)
       end
     end
 
