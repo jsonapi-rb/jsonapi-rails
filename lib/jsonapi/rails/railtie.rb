@@ -30,6 +30,12 @@ module JSONAPI
           ::ActionController::Renderers.add(:jsonapi) do |resources, options|
             self.content_type ||= Mime[:jsonapi]
 
+            # Renderer proc is evaluated in the controller context, so it
+            # has access to the jsonapi_pagination method.
+            if (pagination_links = jsonapi_pagination(resources))
+              (options[:links] ||= {}).merge!(pagination_links)
+            end
+
             RENDERERS[:jsonapi].render(resources, options).to_json
           end
 
