@@ -30,18 +30,17 @@ module JSONAPI
           ::ActionController::Renderers.add(:jsonapi) do |resources, options|
             self.content_type ||= Mime[:jsonapi]
 
-            # Renderer proc is evaluated in the controller context, so it
-            # has access to the jsonapi_pagination method.
+            # Renderer proc is evaluated in the controller context.
             if (pagination_links = jsonapi_pagination(resources))
               (options[:links] ||= {}).merge!(pagination_links)
             end
+            options[:expose] = jsonapi_expose.merge!(options[:expose] || {})
 
             RENDERERS[:jsonapi].render(resources, options).to_json
           end
 
           ::ActionController::Renderers.add(:jsonapi_error) do |errors, options|
-            # Renderer proc is evaluated in the controller context, so it
-            # has access to the jsonapi_pointers method.
+            # Renderer proc is evaluated in the controller context.
             options = options.merge(_jsonapi_pointers: jsonapi_pointers)
             self.content_type ||= Mime[:jsonapi]
 

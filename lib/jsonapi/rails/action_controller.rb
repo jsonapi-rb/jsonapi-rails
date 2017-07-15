@@ -42,6 +42,12 @@ module JSONAPI
         end
       end
 
+      def jsonapi_expose
+        {
+          url_helpers: ::Rails.application.routes.url_helpers
+        }
+      end
+
       def jsonapi_pagination(_collection)
         nil
       end
