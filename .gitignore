@@ -10,10 +10,6 @@
 /test/version_tmp/
 /tmp/
 
-## Dummy app temp files:
-/spec/dummy/db
-/spec/dummy/log
-
 ## Specific to RubyMotion:
 .dat*
 .repl_history
