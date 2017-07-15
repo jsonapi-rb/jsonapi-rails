@@ -33,8 +33,6 @@ module JSONAPI
         end
       end
 
-      private
-
       def jsonapi_pointers
         request.env[JSONAPI_POINTERS_KEY]
       end
