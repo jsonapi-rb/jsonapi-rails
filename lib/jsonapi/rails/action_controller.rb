@@ -3,6 +3,23 @@ require 'jsonapi/parser'
 
 module JSONAPI
   module Rails
+    module Deserializable
+      class Resource < JSONAPI::Deserializable::Resource
+        id
+        type
+        attributes
+        has_one do |_rel, id, type, key|
+          type = type.to_s.singularize.camelize
+          { "#{key}_id".to_sym => id, "#{key}_type".to_sym => type }
+        end
+        has_many do |_rel, ids, types, key|
+          key   = key.to_s.singularize
+          types = types.map { |t| t.to_s.singularize.camelize }
+          { "#{key}_ids".to_sym => ids, "#{key}_types".to_sym => types }
+        end
+      end
+    end
+
     module ActionController
       extend ActiveSupport::Concern
 
@@ -10,22 +27,14 @@ module JSONAPI
 
       class_methods do
         def deserializable_resource(key, options = {}, &block)
-          _deserializable(key, options,
-                          JSONAPI::Deserializable::Resource, &block)
-        end
-
-        def deserializable_relationship(key, options = {}, &block)
-          _deserializable(key, options,
-                          JSONAPI::Deserializable::Relationship, &block)
-        end
-
-        # @api private
-        def _deserializable(key, options, fallback, &block)
           options = options.dup
-          klass = options.delete(:class) || Class.new(fallback, &block)
+          klass = options.delete(:class) ||
+                  Class.new(JSONAPI::Rails::Deserializable::Resource, &block)
 
           before_action(options) do |controller|
-            resource = klass.new(controller.params[:_jsonapi].to_unsafe_hash)
+            hash = controller.params[:_jsonapi].to_unsafe_hash
+            JSONAPI::Parser::Resource.parse!(hash)
+            resource = klass.new(hash[:data])
             controller.request.env[JSONAPI_POINTERS_KEY] =
               resource.reverse_mapping
             controller.params[key.to_sym] = resource.to_hash
