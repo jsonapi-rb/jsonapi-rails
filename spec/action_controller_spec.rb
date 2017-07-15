@@ -57,7 +57,8 @@ describe ActionController::Base, type: :controller do
         'data' => {
           'id' => '1',
           'type' => 'users',
-          'attributes' => { 'name' => 'Lucas' } }
+          'attributes' => { 'name' => 'Lucas' }
+        }
       }
     end
 
