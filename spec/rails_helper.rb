@@ -6,7 +6,6 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require 'spec_helper'
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
-require 'dry-validation'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -55,41 +54,4 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
-end
-
-# Custom RSpec matchers
-module JSONAPI
-  module RSpec
-    class BeValidJsonapiMatcher
-      def matches?(body)
-        JSONAPI.parse_response!(JSON.parse(body))
-        true
-      end
-    end
-
-    def be_valid_jsonapi
-      BeValidJsonapiMatcher.new
-    end
-
-    class MatchSchemaMatcher
-      def matches?(body, &block)
-        schema = Dry::Validation.Schema(&block)
-        @body = JSON.parse(body) unless body.is_a?(Hash)
-        @result = schema.call(@body.with_indifferent_access)
-        @result.success?
-      end
-
-      def failure_message
-        "#{@body} #{@result.errors}"
-      end
-    end
-
-    def match_schema(&block)
-      MatchSchemaMatcher.new(&block)
-    end
-  end
-end
-
-RSpec.configure do |config|
-  config.include JSONAPI::RSpec
 end
