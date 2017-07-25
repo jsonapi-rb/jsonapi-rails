@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe JSONAPI::Rails.config do
+describe JSONAPI::Rails.config do
   context 'when the default configuration is used' do
     it 'should register the jsonapi parameter parser' do
       expect(JSONAPI::Rails.config.register_parameter_parser).to be true
