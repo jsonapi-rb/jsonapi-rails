@@ -11,11 +11,6 @@ module JSONAPI
 
       def render(resources, options)
         opts = options.dup
-        # TODO(beauby): Move this to a global configuration.
-        default_exposures = {
-          url_helpers: ::Rails.application.routes.url_helpers
-        }
-        opts[:expose] = default_exposures.merge!(opts[:expose] || {})
         opts[:jsonapi] = opts.delete(:jsonapi_object)
 
         @renderer.render(resources, opts)
