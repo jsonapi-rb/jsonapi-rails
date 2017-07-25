@@ -42,6 +42,10 @@ module JSONAPI
         end
       end
 
+      def jsonapi_pagination(_collection)
+        nil
+      end
+
       def jsonapi_pointers
         request.env[JSONAPI_POINTERS_KEY]
       end
