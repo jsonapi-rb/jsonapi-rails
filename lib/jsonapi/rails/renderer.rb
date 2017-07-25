@@ -3,34 +3,39 @@ require 'jsonapi/serializable/renderer'
 module JSONAPI
   module Rails
     class SuccessRenderer
-      def self.render(resources, options)
-        opts = options.dup
-        # TODO(beauby): Move this to a global configuration.
-        default_exposures = {
-          url_helpers: ::Rails.application.routes.url_helpers
-        }
-        opts[:expose] = default_exposures.merge!(opts[:expose] || {})
-        opts[:jsonapi] = opts.delete(:jsonapi_object)
+      def initialize(renderer = JSONAPI::Serializable::SuccessRenderer.new)
+        @renderer = renderer
 
-        JSONAPI::Serializable::Renderer.render(resources, opts)
+        freeze
+      end
+
+      def render(resources, options, controller)
+        options = options.dup
+
+        if (pagination_links = controller.jsonapi_pagination(resources))
+          (options[:links] ||= {}).merge!(pagination_links)
+        end
+        options[:expose]  =
+          controller.jsonapi_expose.merge!(options[:expose] || {})
+        options[:jsonapi] =
+          options[:jsonapi_object] || controller.jsonapi_object
+
+        @renderer.render(resources, options)
       end
     end
 
-    class ErrorRenderer
-      def self.render(errors, options)
+    class ErrorsRenderer
+      def initialize(renderer = JSONAPI::Serializable::ErrorsRenderer.new)
+        @renderer = renderer
+
+        freeze
+      end
+
+      def render(errors, options, controller)
+        options = options.merge(_jsonapi_pointers: controller.jsonapi_pointers)
         # TODO(beauby): SerializableError inference on AR validation errors.
-        JSONAPI::Serializable::ErrorRenderer.render(errors, options)
-      end
-    end
 
-    module_function
-
-    # @api private
-    def rails_renderer(renderer)
-      proc do |json, options|
-        json = renderer.render(json, options) unless json.is_a?(String)
-        self.content_type ||= Mime[:jsonapi]
-        self.response_body = json
+        @renderer.render(errors, options)
       end
     end
   end

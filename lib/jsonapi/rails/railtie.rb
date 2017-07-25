@@ -3,6 +3,7 @@ require 'action_controller'
 require 'active_support'
 
 require 'jsonapi/rails/configuration'
+require 'jsonapi/rails/controller'
 require 'jsonapi/rails/parser'
 require 'jsonapi/rails/renderer'
 
@@ -10,16 +11,14 @@ module JSONAPI
   module Rails
     class Railtie < ::Rails::Railtie
       MEDIA_TYPE = 'application/vnd.api+json'.freeze
-      PARSER = JSONAPI::Rails.parser
       RENDERERS = {
-        jsonapi:       JSONAPI::Rails.rails_renderer(SuccessRenderer),
-        jsonapi_error: JSONAPI::Rails.rails_renderer(ErrorRenderer)
+        jsonapi:       SuccessRenderer.new,
+        jsonapi_error: ErrorsRenderer.new
       }.freeze
 
       initializer 'jsonapi-rails.action_controller' do
         ActiveSupport.on_load(:action_controller) do
-          require 'jsonapi/rails/action_controller'
-          include ::JSONAPI::Rails::ActionController
+          include ::JSONAPI::Rails::Controller
 
           if JSONAPI::Rails.config.register_mime_type
             Mime::Type.register MEDIA_TYPE, :jsonapi
@@ -34,22 +33,13 @@ module JSONAPI
           end
 
           if JSONAPI::Rails.config.register_renderers
-            RENDERERS.each do |key, renderer|
-              ::ActionController::Renderers.add(key, &renderer)
-            end
-          end
+            RENDERERS.each do |name, renderer|
+              ::ActionController::Renderers.add(name) do |resources, options|
+                # Renderer proc is evaluated in the controller context.
+                self.content_type ||= Mime[:jsonapi]
 
-          JSONAPI::Deserializable::Resource.configure do |config|
-            config.default_has_one do |key, _rel, id, type|
-              key  = key.to_s.singularize
-              type = type.to_s.singularize.camelize
-              { "#{key}_id".to_sym => id, "#{key}_type".to_sym => type }
-            end
-
-            config.default_has_many do |key, _rel, ids, types|
-              key   = key.to_s.singularize
-              types = types.map { |t| t.to_s.singularize.camelize }
-              { "#{key}_ids".to_sym => ids, "#{key}_types".to_sym => types }
+                renderer.render(resources, options, self).to_json
+              end
             end
           end
         end
