@@ -16,23 +16,27 @@ module JSONAPI
         jsonapi_error: ErrorsRenderer.new
       }.freeze
 
-      initializer 'jsonapi-rails.action_controller' do
-        ActiveSupport.on_load(:action_controller) do
-          include ::JSONAPI::Rails::Controller
+      initializer 'jsonapi.init', after: :load_config_initializers do
+        if JSONAPI::Rails.config.register_mime_type
+          Mime::Type.register MEDIA_TYPE, :jsonapi
+        end
 
-          if JSONAPI::Rails.config.register_mime_type
-            Mime::Type.register MEDIA_TYPE, :jsonapi
+        if JSONAPI::Rails.config.register_parameter_parser
+          if ::Rails::VERSION::MAJOR >= 5
+            ::ActionDispatch::Request.parameter_parsers[:jsonapi] = PARSER
+          else
+            ::ActionDispatch::ParamsParser::DEFAULT_PARSERS[Mime[:jsonapi]] = PARSER
           end
+        end
 
-          if JSONAPI::Rails.config.register_parameter_parser
-            if ::Rails::VERSION::MAJOR >= 5
-              ::ActionDispatch::Request.parameter_parsers[:jsonapi] = PARSER
-            else
-              ::ActionDispatch::ParamsParser::DEFAULT_PARSERS[Mime[:jsonapi]] = PARSER
-            end
+        if JSONAPI::Rails.config.extend_action_controller
+          ActiveSupport.on_load(:action_controller) do
+            include ::JSONAPI::Rails::Controller
           end
+        end
 
-          if JSONAPI::Rails.config.register_renderers
+        if JSONAPI::Rails.config.register_renderers
+          ActiveSupport.on_load(:action_controller) do
             RENDERERS.each do |name, renderer|
               ::ActionController::Renderers.add(name) do |resources, options|
                 # Renderer proc is evaluated in the controller context.
