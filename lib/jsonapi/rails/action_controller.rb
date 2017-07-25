@@ -42,6 +42,10 @@ module JSONAPI
         end
       end
 
+      def jsonapi_object
+        nil
+      end
+
       def jsonapi_expose
         {
           url_helpers: ::Rails.application.routes.url_helpers
