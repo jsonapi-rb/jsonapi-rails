@@ -4,6 +4,7 @@ require 'active_support'
 
 require 'jsonapi/rails/parser'
 require 'jsonapi/rails/renderer'
+require 'jsonapi/rails/controller'
 
 module JSONAPI
   module Rails
@@ -16,8 +17,7 @@ module JSONAPI
 
       initializer 'jsonapi-rails.action_controller' do
         ActiveSupport.on_load(:action_controller) do
-          require 'jsonapi/rails/action_controller'
-          include ::JSONAPI::Rails::ActionController
+          include ::JSONAPI::Rails::Controller
 
           Mime::Type.register MEDIA_TYPE, :jsonapi
 
