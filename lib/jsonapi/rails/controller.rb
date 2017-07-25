@@ -33,11 +33,15 @@ module JSONAPI
 
           before_action(options) do |controller|
             hash = controller.params[:_jsonapi].to_unsafe_hash
-            JSONAPI::Parser::Resource.parse!(hash)
-            resource = klass.new(hash[:data])
-            controller.request.env[JSONAPI_POINTERS_KEY] =
-              resource.reverse_mapping
-            controller.params[key.to_sym] = resource.to_hash
+            ActiveSupport::Notifications.instrument('parse.jsonapi',
+                                                    payload: hash,
+                                                    class: klass) do
+              JSONAPI::Parser::Resource.parse!(hash)
+              resource = klass.new(hash[:data])
+              controller.request.env[JSONAPI_POINTERS_KEY] =
+                resource.reverse_mapping
+              controller.params[key.to_sym] = resource.to_hash
+            end
           end
         end
       end
