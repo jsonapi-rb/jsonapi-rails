@@ -8,7 +8,7 @@ module JSONAPI
       register_renderers: true
     }.freeze
 
-    def self.configure(&block)
+    def self.configure
       yield config
     end
 
