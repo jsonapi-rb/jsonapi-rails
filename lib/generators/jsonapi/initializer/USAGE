@@ -1,0 +1,5 @@
+Description:
+    Generates an initializer for jsonapi-rails.
+
+Example:
+    `rails generate jsonapi:initializer`
