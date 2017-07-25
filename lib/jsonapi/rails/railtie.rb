@@ -41,20 +41,6 @@ module JSONAPI
 
             RENDERERS[:jsonapi_error].render(errors, options).to_json
           end
-
-          JSONAPI::Deserializable::Resource.configure do |config|
-            config.default_has_one do |key, _rel, id, type|
-              key  = key.to_s.singularize
-              type = type.to_s.singularize.camelize
-              { "#{key}_id".to_sym => id, "#{key}_type".to_sym => type }
-            end
-
-            config.default_has_many do |key, _rel, ids, types|
-              key   = key.to_s.singularize
-              types = types.map { |t| t.to_s.singularize.camelize }
-              { "#{key}_ids".to_sym => ids, "#{key}_types".to_sym => types }
-            end
-          end
         end
       end
     end
