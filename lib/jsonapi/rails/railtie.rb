@@ -38,7 +38,11 @@ module JSONAPI
                 # Renderer proc is evaluated in the controller context.
                 self.content_type ||= Mime[:jsonapi]
 
-                renderer.render(resources, options, self).to_json
+                ActiveSupport::Notifications.instrument('render.jsonapi',
+                                                        resources: resources,
+                                                        options: options) do
+                  renderer.render(resources, options, self).to_json
+                end
               end
             end
           end
