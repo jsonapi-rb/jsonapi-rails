@@ -20,7 +20,7 @@ module JSONAPI
       end
     end
 
-    module ActionController
+    module Controller
       extend ActiveSupport::Concern
 
       JSONAPI_POINTERS_KEY = 'jsonapi_deserializable.jsonapi_pointers'.freeze
