@@ -1,27 +1,23 @@
 module JSONAPI
   module Rails
-    class ActiveModelError
-      def initialize(field, message, source)
-        @field   = field
-        @message = message
-        @source  = source
-
-        freeze
+    class ActiveModelError < Serializable::Error
+      title do
+        "Invalid #{@field}" unless @field.nil?
       end
 
-      def as_jsonapi
-        {}.tap do |hash|
-          hash[:detail] = @message
-          hash[:title]  = "Invalid #{@field}" unless @field.nil?
-          hash[:source] = { pointer: @source } unless @source.nil?
-        end
+      detail do
+        @message
+      end
+
+      source do
+        pointer @pointer unless @pointer.nil?
       end
     end
 
     class ActiveModelErrors
-      def initialize(errors, reverse_mapping)
-        @errors = errors
-        @reverse_mapping = reverse_mapping || {}
+      def initialize(exposures)
+        @errors = exposures[:object]
+        @reverse_mapping = exposures[:_jsonapi_pointers] || {}
 
         freeze
       end
@@ -29,7 +25,8 @@ module JSONAPI
       def to_a
         @errors.keys.flat_map do |key|
           @errors.full_messages_for(key).map do |message|
-            ActiveModelError.new(key, message, @reverse_mapping[key])
+            ActiveModelError.new(field: key, message: message,
+                                 pointer: @reverse_mapping[key])
           end
         end
       end
