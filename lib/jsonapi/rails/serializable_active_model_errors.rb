@@ -1,6 +1,6 @@
 module JSONAPI
   module Rails
-    class ActiveModelError < Serializable::Error
+    class SerializableActiveModelError < Serializable::Error
       title do
         "Invalid #{@field}" unless @field.nil?
       end
@@ -14,7 +14,7 @@ module JSONAPI
       end
     end
 
-    class ActiveModelErrors
+    class SerializableActiveModelErrors
       def initialize(exposures)
         @errors = exposures[:object]
         @reverse_mapping = exposures[:_jsonapi_pointers] || {}
@@ -22,15 +22,15 @@ module JSONAPI
         freeze
       end
 
-      def to_a
+      def as_jsonapi
         @errors.keys.flat_map do |key|
           @errors.full_messages_for(key).map do |message|
-            ActiveModelError.new(field: key, message: message,
-                                 pointer: @reverse_mapping[key])
+            SerializableActiveModelError.new(field: key, message: message,
+                                             pointer: @reverse_mapping[key])
+              .as_jsonapi
           end
         end
       end
-      alias to_array to_a
     end
   end
 end

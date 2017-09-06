@@ -10,7 +10,7 @@ describe ActionController::Base, '#render', type: :controller do
         end
         user = OpenStruct.new(id: 1, name: 'Lucas')
 
-        render jsonapi: user, class: serializer
+        render jsonapi: user, class: { OpenStruct: serializer }
       end
     end
 

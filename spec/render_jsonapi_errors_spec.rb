@@ -51,36 +51,6 @@ describe ActionController::Base, '#render', type: :controller do
     end
   end
 
-  context 'when rendering JSONAPI::Serializable::Error' do
-    controller do
-      def create
-        errors = [
-          JSONAPI::Serializable::Error.create(
-            detail: 'Name can\'t be blank',
-            title: 'Invalid name',
-            source: { pointer: '/data/attributes/name' }
-          ),
-          JSONAPI::Serializable::Error.create(
-            detail: 'Email must be a valid email',
-            title: 'Invalid email',
-            source: { pointer: '/data/attributes/email' }
-          )
-        ]
-
-        render jsonapi_errors: errors
-      end
-    end
-
-    subject { JSON.parse(response.body) }
-
-    it 'renders a JSON API error document' do
-      post :create
-
-      expect(response.content_type).to eq('application/vnd.api+json')
-      is_expected.to eq(serialized_errors)
-    end
-  end
-
   context 'when rendering error hashes' do
     controller do
       def create
