@@ -4,12 +4,6 @@ require 'jsonapi/serializable/renderer'
 
 module JSONAPI
   module Rails
-    DEFAULT_INFERRER = Hash.new do |h, k|
-      names = k.to_s.split('::')
-      klass = names.pop
-      h[k] = [*names, "Serializable#{klass}"].join('::').safe_constantize
-    end
-
     class SuccessRenderer
       def initialize(renderer = JSONAPI::Serializable::Renderer.new)
         @renderer = renderer
@@ -28,12 +22,12 @@ module JSONAPI
       # @api private
       def default_options(options, controller, resources)
         options.dup.tap do |opts|
-          opts[:class] ||= DEFAULT_INFERRER
+          opts[:class] ||= controller.jsonapi_class
           if (pagination_links = controller.jsonapi_pagination(resources))
             (opts[:links] ||= {}).merge!(pagination_links)
           end
           opts[:expose]  = controller.jsonapi_expose.merge!(opts[:expose] || {})
-          opts[:jsonapi] = opts[:jsonapi_object] || controller.jsonapi_object
+          opts[:jsonapi] = opts.delete(:jsonapi_object) || controller.jsonapi_object
         end
       end
     end
@@ -58,8 +52,7 @@ module JSONAPI
       # @api private
       def default_options(options, controller)
         options.dup.tap do |opts|
-          # TODO(lucas): Make this configurable.
-          opts[:class] ||= DEFAULT_INFERRER
+          opts[:class] ||= controller.jsonapi_class
           unless opts[:class].key?(:'ActiveModel::Errors')
             opts[:class][:'ActiveModel::Errors'] =
               JSONAPI::Rails::SerializableActiveModelErrors

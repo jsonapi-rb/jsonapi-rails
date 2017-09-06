@@ -46,11 +46,21 @@ module JSONAPI
         end
       end
 
+      def jsonapi_class
+        # TODO(lucas): Make this configurable
+        Hash.new do |h, k|
+          names = k.to_s.split('::')
+          klass = names.pop
+          h[k] = [*names, "Serializable#{klass}"].join('::').safe_constantize
+        end
+      end
+
       def jsonapi_object
         nil
       end
 
       def jsonapi_expose
+        # TODO(lucas): Make this configurable
         {
           url_helpers: ::Rails.application.routes.url_helpers
         }
