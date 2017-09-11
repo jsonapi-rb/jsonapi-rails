@@ -87,14 +87,14 @@ module JSONAPI
       # Overridden by the `class` renderer option.
       # @return [Hash{Symbol=>Class}]
       def jsonapi_class
-        JSONAPI::Rails.config[:jsonapi_class]
+        JSONAPI::Rails.config[:jsonapi_class].dup
       end
 
       # Hook for serializable class mapping (for errors).
       # Overridden by the `class` renderer option.
       # @return [Hash{Symbol=>Class}]
       def jsonapi_errors_class
-        JSONAPI::Rails.config[:jsonapi_errors_class]
+        JSONAPI::Rails.config[:jsonapi_errors_class].dup
       end
 
       # Hook for the jsonapi object.
