@@ -1,6 +1,31 @@
 JSONAPI::Rails.configure do |config|
-  # config.register_mime_type = true
-  # config.register_param_parser = true
-  # config.register_renderers = true
-  # config.extend_action_controller = true
+  # # Set a default serializable class mapping.
+  # config.jsonapi_class = Hash.new { |h, k|
+  #   names = k.to_s.split('::')
+  #   klass = names.pop
+  #   h[k] = [*names, "Serializable#{klass}"].join('::').safe_constantize
+  # }
+  #
+  # # Set a default serializable class mapping for errors.
+  # config.jsonapi_errors_class = Hash.new { |h, k|
+  #   names = k.to_s.split('::')
+  #   klass = names.pop
+  #   h[k] = [*names, "Serializable#{klass}"].join('::').safe_constantize
+  # }.tap { |h|
+  #   h[:'ActiveModel::Errors'] = JSONAPI::Rails::SerializableActiveModelErrors
+  #   h[:Hash] = JSONAPI::Rails::SerializableErrorHash
+  # }
+  #
+  # # Set a default JSON API object.
+  # config.jsonapi_object = {
+  #   version: '1.0'
+  # }
+  #
+  # # Set default exposures.
+  # config.jsonapi_expose = {
+  #   url_helpers: ::Rails.application.routes.url_helpers
+  # }
+  #
+  # # Set a default pagination scheme.
+  # config.jsonapi_pagination = ->(_) { nil }
 end
