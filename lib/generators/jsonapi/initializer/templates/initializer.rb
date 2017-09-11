@@ -22,8 +22,9 @@ JSONAPI::Rails.configure do |config|
   # }
   #
   # # Set default exposures.
-  # config.jsonapi_expose = {
-  #   url_helpers: ::Rails.application.routes.url_helpers
+  # # A lambda/proc that will be eval'd in the controller context.
+  # config.jsonapi_expose = lambda {
+  #   { url_helpers: ::Rails.application.routes.url_helpers }
   # }
   #
   # # Set a default pagination scheme.

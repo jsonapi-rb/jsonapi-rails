@@ -107,7 +107,7 @@ module JSONAPI
       # Hook for default exposures.
       # @return [Hash]
       def jsonapi_expose
-        JSONAPI::Rails.config[:jsonapi_expose]
+        instance_exec(&JSONAPI::Rails.config[:jsonapi_expose])
       end
 
       # Hook for pagination scheme.

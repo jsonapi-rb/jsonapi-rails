@@ -20,8 +20,8 @@ module JSONAPI
       version: '1.0'
     }.freeze
 
-    DEFAULT_JSONAPI_EXPOSE = {
-      url_helpers: ::Rails.application.routes.url_helpers
+    DEFAULT_JSONAPI_EXPOSE = lambda {
+      { url_helpers: ::Rails.application.routes.url_helpers }
     }.freeze
 
     DEFAULT_JSONAPI_PAGINATION = ->(_) { nil }
