@@ -1,5 +1,6 @@
 module JSONAPI
   module Rails
+    # @private
     class SerializableActiveModelError < Serializable::Error
       title do
         "Invalid #{@field}" unless @field.nil?
@@ -14,6 +15,7 @@ module JSONAPI
       end
     end
 
+    # @private
     class SerializableActiveModelErrors
       def initialize(exposures)
         @errors = exposures[:object]

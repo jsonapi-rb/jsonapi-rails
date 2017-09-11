@@ -14,7 +14,8 @@ describe ActionController::Base, '#render', type: :controller do
           'title' => 'Invalid email',
           'source' => { 'pointer' => '/data/attributes/email' }
         }
-      ]
+      ],
+      'jsonapi' => { 'version' => '1.0' }
     }
   end
 

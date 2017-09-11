@@ -21,7 +21,8 @@ describe ActionController::Base, '#render', type: :controller do
           'id' => '1',
           'type' => 'users',
           'attributes' => { 'name' => 'Lucas' }
-        }
+        },
+        'jsonapi' => { 'version' => '1.0' }
       }
     end
 
@@ -33,14 +34,14 @@ describe ActionController::Base, '#render', type: :controller do
     end
   end
 
-  context 'when specifying a default jsonapi object' do
+  context 'when specifying a custom jsonapi object at controller level' do
     controller do
       def index
         render jsonapi: nil
       end
 
       def jsonapi_object
-        { version: '1.0' }
+        { version: '2.0' }
       end
     end
 
@@ -48,7 +49,7 @@ describe ActionController::Base, '#render', type: :controller do
     let(:document) do
       {
         'data' => nil,
-        'jsonapi' => { 'version' => '1.0' }
+        'jsonapi' => { 'version' => '2.0' }
       }
     end
 
