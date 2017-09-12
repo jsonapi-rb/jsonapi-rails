@@ -71,7 +71,8 @@ module JSONAPI
             #   present.
             hash = controller.params[:_jsonapi].to_unsafe_hash
             ActiveSupport::Notifications
-              .instrument('parse.jsonapi', payload: hash, class: klass) do
+              .instrument('parse.jsonapi-rails',
+                          key: key, payload: hash, class: klass) do
               JSONAPI::Parser::Resource.parse!(hash)
               resource = klass.new(hash[:data])
               controller.request.env[JSONAPI_POINTERS_KEY] =
