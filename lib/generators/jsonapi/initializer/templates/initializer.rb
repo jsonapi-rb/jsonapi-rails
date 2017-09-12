@@ -48,6 +48,10 @@ JSONAPI::Rails.configure do |config|
   #   params[:include]
   # }
   #
+  # # Set default links.
+  # # A lambda/proc that will be eval'd in the controller context.
+  # config.jsonapi_links = ->() { {} }
+  #
   # # Set a default pagination scheme.
   # config.jsonapi_pagination = ->(_) { {} }
 end
