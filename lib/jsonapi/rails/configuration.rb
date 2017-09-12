@@ -28,7 +28,9 @@ module JSONAPI
 
     DEFAULT_JSONAPI_INCLUDE = ->() { nil }
 
-    DEFAULT_JSONAPI_PAGINATION = ->(_) { nil }
+    DEFAULT_JSONAPI_LINKS = ->() { {} }
+
+    DEFAULT_JSONAPI_PAGINATION = ->(_) { {} }
 
     DEFAULT_CONFIG = {
       jsonapi_class: DEFAULT_JSONAPI_CLASS,
@@ -36,6 +38,7 @@ module JSONAPI
       jsonapi_expose:  DEFAULT_JSONAPI_EXPOSE,
       jsonapi_fields:  DEFAULT_JSONAPI_FIELDS,
       jsonapi_include: DEFAULT_JSONAPI_INCLUDE,
+      jsonapi_links:   DEFAULT_JSONAPI_LINKS,
       jsonapi_object:  DEFAULT_JSONAPI_OBJECT,
       jsonapi_pagination: DEFAULT_JSONAPI_PAGINATION
     }.freeze

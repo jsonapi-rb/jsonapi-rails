@@ -122,6 +122,12 @@ module JSONAPI
         instance_exec(&JSONAPI::Rails.config[:jsonapi_include])
       end
 
+      # Hook for default links.
+      # @return [IncludeDirective]
+      def jsonapi_links
+        instance_exec(&JSONAPI::Rails.config[:jsonapi_links])
+      end
+
       # Hook for pagination scheme.
       # @return [Hash]
       def jsonapi_pagination(resources)

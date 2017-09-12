@@ -49,5 +49,5 @@ JSONAPI::Rails.configure do |config|
   # }
   #
   # # Set a default pagination scheme.
-  # config.jsonapi_pagination = ->(_) { nil }
+  # config.jsonapi_pagination = ->(_) { {} }
 end
