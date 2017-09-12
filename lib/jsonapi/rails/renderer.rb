@@ -22,6 +22,7 @@ module JSONAPI
       def default_options(options, controller, resources)
         options.dup.tap do |opts|
           opts[:class] ||= controller.jsonapi_class
+          opts[:cache] ||= controller.jsonapi_cache
           opts[:links] =
             controller.jsonapi_links
                       .merge!(controller.jsonapi_pagination(resources))

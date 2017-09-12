@@ -1,5 +1,6 @@
 ### Added
 
+* Default configuration and hooks for the `cache` parameter.
 * Default configuration and hooks for the `links` parameter.
 * Default configuration and hooks for the `fields` parameter.
 * Default configuration and hooks for the `include` parameter.

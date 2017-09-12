@@ -21,6 +21,16 @@ JSONAPI::Rails.configure do |config|
   #   version: '1.0'
   # }
   #
+  # # Set default cache.
+  # # A lambda/proc that will be eval'd in the controller context.
+  # config.jsonapi_cache = ->() { nil }
+  #
+  # # Uncomment the following to enable fragment caching. Make sure you
+  # #   invalidate cache keys accordingly.
+  # config.jsonapi_cache = lambda {
+  #   Rails.cache
+  # }
+  #
   # # Set default exposures.
   # # A lambda/proc that will be eval'd in the controller context.
   # config.jsonapi_expose = lambda {

@@ -23,6 +23,8 @@ module JSONAPI
         version: '1.0'
       }.freeze
 
+      DEFAULT_JSONAPI_CACHE = ->() { nil }
+
       DEFAULT_JSONAPI_EXPOSE = lambda {
         { url_helpers: ::Rails.application.routes.url_helpers }
       }
@@ -38,6 +40,7 @@ module JSONAPI
       DEFAULT_CONFIG = {
         jsonapi_class: DEFAULT_JSONAPI_CLASS,
         jsonapi_errors_class: DEFAULT_JSONAPI_ERRORS_CLASS,
+        jsonapi_cache:   DEFAULT_JSONAPI_CACHE,
         jsonapi_expose:  DEFAULT_JSONAPI_EXPOSE,
         jsonapi_fields:  DEFAULT_JSONAPI_FIELDS,
         jsonapi_include: DEFAULT_JSONAPI_INCLUDE,
