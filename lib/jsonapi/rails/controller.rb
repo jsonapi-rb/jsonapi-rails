@@ -67,9 +67,15 @@ module JSONAPI
                   Class.new(JSONAPI::Rails::Deserializable::Resource, &block)
 
           before_action(options) do |controller|
-            # TODO(lucas): Fail with helpful error message if _jsonapi not
-            #   present.
-            hash = controller.params[:_jsonapi].to_unsafe_hash
+            hash = controller.params.to_unsafe_hash[:_jsonapi]
+            if hash.nil?
+              JSONAPI::Rails.config[:logger].warn do
+                "Unable to deserialize #{key} because no JSON API payload was" \
+                " found. (#{controller.controller_name}##{params[:action]})"
+              end
+              next
+            end
+
             ActiveSupport::Notifications
               .instrument('parse.jsonapi-rails',
                           key: key, payload: hash, class: klass) do
