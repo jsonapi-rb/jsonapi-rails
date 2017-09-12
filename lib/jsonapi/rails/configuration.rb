@@ -24,7 +24,7 @@ module JSONAPI
       { url_helpers: ::Rails.application.routes.url_helpers }
     }
 
-    DEFAULT_JSONAPI_FIELDS = ->() { params[:fields] }
+    DEFAULT_JSONAPI_FIELDS = ->() { nil }
 
     DEFAULT_JSONAPI_INCLUDE = ->() { nil }
 
