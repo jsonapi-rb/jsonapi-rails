@@ -99,7 +99,7 @@ module JSONAPI
 
       # Hook for the jsonapi object.
       # Overridden by the `jsonapi_object` renderer option.
-      # @return [Hash]
+      # @return [Hash,nil]
       def jsonapi_object
         JSONAPI::Rails.config[:jsonapi_object]
       end
@@ -117,7 +117,7 @@ module JSONAPI
       end
 
       # Hook for default fields.
-      # @return [Hash{Symbol=>Array<Symbol>}]
+      # @return [Hash{Symbol=>Array<Symbol>},nil]
       def jsonapi_fields
         instance_exec(&JSONAPI::Rails.config[:jsonapi_fields])
       end
@@ -129,9 +129,15 @@ module JSONAPI
       end
 
       # Hook for default links.
-      # @return [IncludeDirective]
+      # @return [Hash]
       def jsonapi_links
         instance_exec(&JSONAPI::Rails.config[:jsonapi_links])
+      end
+
+      # Hook for default meta.
+      # @return [Hash,nil]
+      def jsonapi_meta
+        instance_exec(&JSONAPI::Rails.config[:jsonapi_meta])
       end
 
       # Hook for pagination scheme.

@@ -32,6 +32,7 @@ module JSONAPI
           opts[:include] ||= controller.jsonapi_include
           opts[:jsonapi] = opts.delete(:jsonapi_object) ||
                            controller.jsonapi_object
+          opts[:meta] ||= controller.jsonapi_meta
         end
       end
       # rubocop:enable Metrics/MethodLength, Metrics/AbcSize

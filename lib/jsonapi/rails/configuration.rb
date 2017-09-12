@@ -35,6 +35,8 @@ module JSONAPI
 
       DEFAULT_JSONAPI_LINKS = ->() { {} }
 
+      DEFAULT_JSONAPI_META = ->() { nil }
+
       DEFAULT_JSONAPI_PAGINATION = ->(_) { {} }
 
       DEFAULT_CONFIG = {
@@ -45,6 +47,7 @@ module JSONAPI
         jsonapi_fields:  DEFAULT_JSONAPI_FIELDS,
         jsonapi_include: DEFAULT_JSONAPI_INCLUDE,
         jsonapi_links:   DEFAULT_JSONAPI_LINKS,
+        jsonapi_meta:    DEFAULT_JSONAPI_META,
         jsonapi_object:  DEFAULT_JSONAPI_OBJECT,
         jsonapi_pagination: DEFAULT_JSONAPI_PAGINATION
       }.freeze
