@@ -110,6 +110,12 @@ module JSONAPI
         instance_exec(&JSONAPI::Rails.config[:jsonapi_expose])
       end
 
+      # Hook for default cache.
+      # @return [#fetch_multi]
+      def jsonapi_cache
+        instance_exec(&JSONAPI::Rails.config[:jsonapi_cache])
+      end
+
       # Hook for default fields.
       # @return [Hash{Symbol=>Array<Symbol>}]
       def jsonapi_fields
