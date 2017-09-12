@@ -39,7 +39,7 @@ module JSONAPI
 
       DEFAULT_JSONAPI_PAGINATION = ->(_) { {} }
 
-      DEFAULT_LOGGER = Logger.new(STDOUT)
+      DEFAULT_LOGGER = Logger.new(STDERR)
 
       DEFAULT_CONFIG = {
         jsonapi_class: DEFAULT_JSONAPI_CLASS,
