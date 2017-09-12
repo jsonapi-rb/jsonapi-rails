@@ -68,4 +68,10 @@ JSONAPI::Rails.configure do |config|
   #
   # # Set a default pagination scheme.
   # config.jsonapi_pagination = ->(_) { {} }
+  #
+  # # Set a logger.
+  # config.logger = Logger.new(STDOUT)
+  #
+  # # Uncomment the following to disable logging.
+  # config.logger = Logger.new('/dev/null')
 end

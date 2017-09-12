@@ -39,6 +39,8 @@ module JSONAPI
 
       DEFAULT_JSONAPI_PAGINATION = ->(_) { {} }
 
+      DEFAULT_LOGGER = Logger.new(STDERR)
+
       DEFAULT_CONFIG = {
         jsonapi_class: DEFAULT_JSONAPI_CLASS,
         jsonapi_errors_class: DEFAULT_JSONAPI_ERRORS_CLASS,
@@ -49,7 +51,8 @@ module JSONAPI
         jsonapi_links:   DEFAULT_JSONAPI_LINKS,
         jsonapi_meta:    DEFAULT_JSONAPI_META,
         jsonapi_object:  DEFAULT_JSONAPI_OBJECT,
-        jsonapi_pagination: DEFAULT_JSONAPI_PAGINATION
+        jsonapi_pagination: DEFAULT_JSONAPI_PAGINATION,
+        logger: DEFAULT_LOGGER
       }.freeze
 
       def configure
