@@ -18,17 +18,22 @@ module JSONAPI
 
       private
 
+      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       def default_options(options, controller, resources)
         options.dup.tap do |opts|
           opts[:class] ||= controller.jsonapi_class
-          if (pagination_links = controller.jsonapi_pagination(resources))
-            opts[:links] = (opts[:links] || {}).merge(pagination_links)
-          end
-          opts[:expose]  = controller.jsonapi_expose.merge(opts[:expose] || {})
+          opts[:links] =
+            controller.jsonapi_links
+                      .merge!(controller.jsonapi_pagination(resources))
+                      .merge!(opts[:links] || {})
+          opts[:expose] = controller.jsonapi_expose.merge!(opts[:expose] || {})
+          opts[:fields] ||= controller.jsonapi_fields
+          opts[:include] ||= controller.jsonapi_include
           opts[:jsonapi] = opts.delete(:jsonapi_object) ||
                            controller.jsonapi_object
         end
       end
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
     end
 
     # @private
@@ -52,6 +57,7 @@ module JSONAPI
       def default_options(options, controller)
         options.dup.tap do |opts|
           opts[:class] ||= controller.jsonapi_errors_class
+          opts[:links] = controller.jsonapi_links.merge!(opts[:links] || {})
           opts[:expose] =
             controller.jsonapi_expose
                       .merge(opts[:expose] || {})

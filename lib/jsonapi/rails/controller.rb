@@ -110,6 +110,24 @@ module JSONAPI
         instance_exec(&JSONAPI::Rails.config[:jsonapi_expose])
       end
 
+      # Hook for default fields.
+      # @return [Hash{Symbol=>Array<Symbol>}]
+      def jsonapi_fields
+        instance_exec(&JSONAPI::Rails.config[:jsonapi_fields])
+      end
+
+      # Hook for default includes.
+      # @return [IncludeDirective]
+      def jsonapi_include
+        instance_exec(&JSONAPI::Rails.config[:jsonapi_include])
+      end
+
+      # Hook for default links.
+      # @return [IncludeDirective]
+      def jsonapi_links
+        instance_exec(&JSONAPI::Rails.config[:jsonapi_links])
+      end
+
       # Hook for pagination scheme.
       # @return [Hash]
       def jsonapi_pagination(resources)

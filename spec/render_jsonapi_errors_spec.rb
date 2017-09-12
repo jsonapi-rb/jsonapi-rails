@@ -1,6 +1,18 @@
 require 'rails_helper'
 
 describe ActionController::Base, '#render', type: :controller do
+  with_model :User, scope: :all do
+    table do |t|
+      t.string :name
+      t.string :email
+    end
+
+    model do
+      validates :name, presence: true
+      validates :email, format: { with: /@/, message: 'must be a valid email' }
+    end
+  end
+
   let(:serialized_errors) do
     {
       'errors' => [
@@ -20,11 +32,6 @@ describe ActionController::Base, '#render', type: :controller do
   end
 
   context 'when rendering ActiveModel::Errors' do
-    class User < ActiveRecord::Base
-      validates :name, presence: true
-      validates :email, format: { with: /@/, message: 'must be a valid email' }
-    end
-
     controller do
       def create
         user = User.new(email: 'lucas')

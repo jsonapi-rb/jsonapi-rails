@@ -27,6 +27,27 @@ JSONAPI::Rails.configure do |config|
   #   { url_helpers: ::Rails.application.routes.url_helpers }
   # }
   #
+  # # Set default fields.
+  # # A lambda/proc that will be eval'd in the controller context.
+  # config.jsonapi_fields = ->() { nil }
+  #
+  # # Uncomment the following to have it default to the `fields` query
+  # #   parameter.
+  # config.jsonapi_fields = lambda {
+  #   fields_param = params.to_unsafe_hash.fetch(:fields, {})
+  #   Hash[fields_param.map { |k, v| [k.to_sym, v.split(',').map!(&:to_sym)] }]
+  # }
+  #
+  # # Set default include.
+  # # A lambda/proc that will be eval'd in the controller context.
+  # config.jsonapi_include = ->() { nil }
+  #
+  # # Uncomment the following to have it default to the `include` query
+  # #   parameter.
+  # config.jsonapi_include = lambda {
+  #   params[:include]
+  # }
+  #
   # # Set a default pagination scheme.
-  # config.jsonapi_pagination = ->(_) { nil }
+  # config.jsonapi_pagination = ->(_) { {} }
 end
