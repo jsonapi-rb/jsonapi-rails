@@ -1,5 +1,6 @@
 ### Added
 
+* Configurable logger and logsubscriber for instrumented events.
 * Default configuration and hooks for the `meta` parameter.
 * Default configuration and hooks for the `cache` parameter.
 * Default configuration and hooks for the `links` parameter.
