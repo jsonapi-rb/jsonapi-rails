@@ -16,7 +16,7 @@ module JSONAPI
       end
 
       def logger
-        JSONAPI::Rails.config[:logger]
+        JSONAPI::Rails.logger
       end
     end
   end

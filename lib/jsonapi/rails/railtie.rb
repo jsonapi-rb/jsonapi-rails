@@ -1,6 +1,4 @@
 require 'rails/railtie'
-require 'action_controller'
-require 'active_support'
 
 require 'jsonapi/rails/log_subscriber'
 require 'jsonapi/rails/renderer'
