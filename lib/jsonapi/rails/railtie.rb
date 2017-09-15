@@ -1,5 +1,6 @@
 require 'rails/railtie'
 
+require 'jsonapi/rails/filter_media_type'
 require 'jsonapi/rails/log_subscriber'
 require 'jsonapi/rails/renderer'
 
@@ -19,7 +20,7 @@ module JSONAPI
         jsonapi_errors: ErrorsRenderer.new
       }.freeze
 
-      initializer 'jsonapi-rails.init' do
+      initializer 'jsonapi-rails.init' do |app|
         register_mime_type
         register_parameter_parser
         register_renderers
@@ -27,6 +28,8 @@ module JSONAPI
           require 'jsonapi/rails/controller'
           include ::JSONAPI::Rails::Controller
         end
+
+        app.middleware.use FilterMediaType
       end
 
       private
@@ -49,7 +52,7 @@ module JSONAPI
           RENDERERS.each do |name, renderer|
             ::ActionController::Renderers.add(name) do |resources, options|
               # Renderer proc is evaluated in the controller context.
-              self.content_type ||= Mime[:jsonapi]
+              headers['Content-Type'] = Mime[:jsonapi].to_s
 
               ActiveSupport::Notifications.instrument('render.jsonapi-rails',
                                                       resources: resources,
