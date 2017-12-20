@@ -47,6 +47,9 @@ module JSONAPI
       def register_renderers
         ActiveSupport.on_load(:action_controller) do
           RENDERERS.each do |name, renderer|
+            # Avoid warning: method redefined
+            next if ::ActionController::Renderers::RENDERERS.include?(name)
+
             ::ActionController::Renderers.add(name) do |resources, options|
               # Renderer proc is evaluated in the controller context.
               self.content_type ||= Mime[:jsonapi]
