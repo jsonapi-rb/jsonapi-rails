@@ -1,19 +1,31 @@
 JSONAPI::Rails.configure do |config|
-  # # Set a default serializable class mapping.
-  # config.jsonapi_class = Hash.new { |h, k|
-  #   names = k.to_s.split('::')
+  # # Set a default serializable class mapper
+  # # Can be a Proc or any object that responds to #call(class_name)
+  # #  e.g. MyCustomMapper.call('User::Article') => User::SerializableArticle
+  # config.jsonapi_class_mapper = -> (class_name) do
+  #   names = class_name.to_s.split('::')
   #   klass = names.pop
-  #   h[k] = [*names, "Serializable#{klass}"].join('::').safe_constantize
+  #   [*names, "Serializable#{klass}"].join('::').safe_constantize
+  # end
+  #
+  # # Set any default serializable class mappings
+  # config.jsonapi_class_mappings = {
+  #   :Car => SerializableVehicle,
+  #   :Boat => SerializableVehicle
   # }
   #
-  # # Set a default serializable class mapping for errors.
-  # config.jsonapi_errors_class = Hash.new { |h, k|
-  #   names = k.to_s.split('::')
-  #   klass = names.pop
-  #   h[k] = [*names, "Serializable#{klass}"].join('::').safe_constantize
-  # }.tap { |h|
-  #   h[:'ActiveModel::Errors'] = JSONAPI::Rails::SerializableActiveModelErrors
-  #   h[:Hash] = JSONAPI::Rails::SerializableErrorHash
+  # # Set a default serializable class mapper for errors.
+  # # Can be a Proc or any object that responds to #call(class_name)
+  # #  e.g. MyCustomMapper.call('PORO::Error') => PORO::SerializableError
+  # # If no jsonapi_errors_class_mapper is configured jsonapi_class_mapper will
+  # #  be used
+  # config.jsonapi_errors_class_mapper = config.jsonapi_class_mapper.dup
+  #
+  # # Set any default serializable class errors mappings
+  # config.jsonapi_errors_class_mappings = {
+  #   :'MyCustomModule::ErrorObject' => MyCustomModule::SerializableErrorObject,
+  #   :'ActiveModel::Errors' => JSONAPI::Rails::SerializableActiveModelErrors,
+  #   :Hash => JSONAPI::Rails::SerializableErrorHash
   # }
   #
   # # Set a default JSON API object.

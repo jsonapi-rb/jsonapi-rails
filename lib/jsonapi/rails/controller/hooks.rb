@@ -1,4 +1,5 @@
 require 'jsonapi/rails/configuration'
+require 'jsonapi/rails/serializable_class_mapping'
 
 module JSONAPI
   module Rails
@@ -11,14 +12,21 @@ module JSONAPI
         # Overridden by the `class` renderer option.
         # @return [Hash{Symbol=>Class}]
         def jsonapi_class
-          JSONAPI::Rails.config[:jsonapi_class].dup
+          JSONAPI::Rails::SerializableClassMapping.new(
+            JSONAPI::Rails.config[:jsonapi_class_mapper],
+            JSONAPI::Rails.config[:jsonapi_class_mappings].dup
+          )
         end
 
         # Hook for serializable class mapping (for errors).
         # Overridden by the `class` renderer option.
         # @return [Hash{Symbol=>Class}]
         def jsonapi_errors_class
-          JSONAPI::Rails.config[:jsonapi_errors_class].dup
+          mapper = JSONAPI::Rails.config[:jsonapi_errors_class_mapper] ||
+            JSONAPI::Rails.config[:jsonapi_class_mapper]
+          JSONAPI::Rails::SerializableClassMapping.new(
+            mapper, JSONAPI::Rails.config[:jsonapi_errors_class_mappings].dup
+          )
         end
 
         # Hook for the jsonapi object.
