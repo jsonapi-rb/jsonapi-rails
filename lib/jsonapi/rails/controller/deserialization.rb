@@ -55,6 +55,7 @@ module JSONAPI
                   "Unable to deserialize #{key} because no JSON API payload was" \
                   " found. (#{controller.controller_name}##{params[:action]})"
                 end
+                controller.jsonapi_payload_malformed
                 next
               end
 
