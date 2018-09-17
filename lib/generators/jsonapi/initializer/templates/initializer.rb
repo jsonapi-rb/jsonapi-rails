@@ -69,6 +69,20 @@ JSONAPI::Rails.configure do |config|
   # # Set a default pagination scheme.
   # config.jsonapi_pagination = ->(_) { {} }
   #
+  # # Set the default action when the payload cannot be deserialized
+  # config.jsonapi_payload_malformed = -> {
+  #   render jsonapi_errors: {
+  #     title: 'Non-compliant Request Body',
+  #     detail: 'The request was not formatted in compliance with the application/vnd.api+json spec',
+  #     links: {
+  #       about: 'http://jsonapi.org/format/'
+  #     }
+  #   }, status: :bad_request
+  # }
+  #
+  # # Uncomment to take no action when the payload cannot be deserialized
+  # config.jsonapi_payload_malformed = nil
+  #
   # # Set a logger.
   # config.logger = Logger.new(STDOUT)
   #
