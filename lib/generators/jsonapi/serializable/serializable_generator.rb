@@ -8,10 +8,18 @@ module Jsonapi
     def copy_serializable_file
       template 'serializable.rb.erb',
                File.join('app/serializable', class_path,
-                         "serializable_#{file_name}.rb")
+                         "#{serializable_file_name}.rb")
     end
 
     private
+
+    def serializable_file_name
+      "serializable_#{file_name}"
+    end
+
+    def serializable_class_name
+      (class_path + [serializable_file_name]).map!(&:camelize).join("::")
+    end
 
     def model_klass
       # TODO(beauby): Ensure the model class exists.
