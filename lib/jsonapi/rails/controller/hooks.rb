@@ -69,6 +69,12 @@ module JSONAPI
         def jsonapi_pagination(resources)
           instance_exec(resources, &JSONAPI::Rails.config[:jsonapi_pagination])
         end
+
+        # Hook for rendering jsonapi_errors when no payload passed
+        def jsonapi_payload_malformed
+          return unless JSONAPI::Rails.config[:jsonapi_payload_malformed]
+          instance_exec(&JSONAPI::Rails.config[:jsonapi_payload_malformed])
+        end
       end
     end
   end
