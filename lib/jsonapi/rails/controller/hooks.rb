@@ -1,4 +1,5 @@
 require 'jsonapi/rails/configuration'
+require 'jsonapi/rails/serializable_class_mapping'
 
 module JSONAPI
   module Rails
@@ -11,14 +12,21 @@ module JSONAPI
         # Overridden by the `class` renderer option.
         # @return [Hash{Symbol=>Class}]
         def jsonapi_class
-          JSONAPI::Rails.config[:jsonapi_class].dup
+          JSONAPI::Rails::SerializableClassMapping.new(
+            JSONAPI::Rails.config[:jsonapi_class_mapper],
+            JSONAPI::Rails.config[:jsonapi_class_mappings].dup
+          )
         end
 
         # Hook for serializable class mapping (for errors).
         # Overridden by the `class` renderer option.
         # @return [Hash{Symbol=>Class}]
         def jsonapi_errors_class
-          JSONAPI::Rails.config[:jsonapi_errors_class].dup
+          mapper = JSONAPI::Rails.config[:jsonapi_errors_class_mapper] ||
+            JSONAPI::Rails.config[:jsonapi_class_mapper]
+          JSONAPI::Rails::SerializableClassMapping.new(
+            mapper, JSONAPI::Rails.config[:jsonapi_errors_class_mappings].dup
+          )
         end
 
         # Hook for the jsonapi object.
@@ -68,6 +76,12 @@ module JSONAPI
         # @return [Hash]
         def jsonapi_pagination(resources)
           instance_exec(resources, &JSONAPI::Rails.config[:jsonapi_pagination])
+        end
+
+        # Hook for rendering jsonapi_errors when no payload passed
+        def jsonapi_payload_malformed
+          return unless JSONAPI::Rails.config[:jsonapi_payload_malformed]
+          instance_exec(&JSONAPI::Rails.config[:jsonapi_payload_malformed])
         end
       end
     end

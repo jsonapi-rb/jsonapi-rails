@@ -7,21 +7,20 @@ module JSONAPI
 
     # @private
     module Configurable
-      DEFAULT_JSONAPI_CLASS = Hash.new do |h, k|
-        names = k.to_s.split('::')
+      DEFAULT_JSONAPI_CLASS_MAPPER = -> (class_name) do
+        names = class_name.to_s.split('::')
         klass = names.pop
-        h[k] = [*names, "Serializable#{klass}"].join('::').safe_constantize
-      end.freeze
+        [*names, "Serializable#{klass}"].join('::').safe_constantize
+      end
 
-      DEFAULT_JSONAPI_ERRORS_CLASS = DEFAULT_JSONAPI_CLASS.dup.merge!(
-        'ActiveModel::Errors'.to_sym =>
-        JSONAPI::Rails::SerializableActiveModelErrors,
-        'Hash'.to_sym => JSONAPI::Rails::SerializableErrorHash
-      ).freeze
+      DEFAULT_JSONAPI_CLASS_MAPPINGS = {}.freeze
 
-      DEFAULT_JSONAPI_OBJECT = {
-        version: '1.0'
+      DEFAULT_JSONAPI_ERROR_CLASS_MAPPINGS = {
+        :'ActiveModel::Errors' => JSONAPI::Rails::SerializableActiveModelErrors,
+        :Hash => JSONAPI::Rails::SerializableErrorHash
       }.freeze
+
+      DEFAULT_JSONAPI_OBJECT = { version: '1.0' }.freeze
 
       DEFAULT_JSONAPI_CACHE = ->() { nil }
 
@@ -39,19 +38,32 @@ module JSONAPI
 
       DEFAULT_JSONAPI_PAGINATION = ->(_) { {} }
 
+      DEFAULT_JSONAPI_PAYLOAD_MALFORMED = -> {
+        render jsonapi_errors: {
+          title: 'Non-compliant Request Body',
+          detail: 'The request was not formatted in compliance with the application/vnd.api+json spec',
+          links: {
+            about: 'http://jsonapi.org/format/'
+          }
+        }, status: :bad_request
+      }
+
       DEFAULT_LOGGER = Logger.new(STDERR)
 
       DEFAULT_CONFIG = {
-        jsonapi_class: DEFAULT_JSONAPI_CLASS,
-        jsonapi_errors_class: DEFAULT_JSONAPI_ERRORS_CLASS,
-        jsonapi_cache:   DEFAULT_JSONAPI_CACHE,
-        jsonapi_expose:  DEFAULT_JSONAPI_EXPOSE,
-        jsonapi_fields:  DEFAULT_JSONAPI_FIELDS,
+        jsonapi_cache: DEFAULT_JSONAPI_CACHE,
+        jsonapi_class_mapper: DEFAULT_JSONAPI_CLASS_MAPPER,
+        jsonapi_class_mappings: DEFAULT_JSONAPI_CLASS_MAPPINGS,
+        jsonapi_errors_class_mapper: nil,
+        jsonapi_errors_class_mappings: DEFAULT_JSONAPI_ERROR_CLASS_MAPPINGS,
+        jsonapi_expose: DEFAULT_JSONAPI_EXPOSE,
+        jsonapi_fields: DEFAULT_JSONAPI_FIELDS,
         jsonapi_include: DEFAULT_JSONAPI_INCLUDE,
-        jsonapi_links:   DEFAULT_JSONAPI_LINKS,
-        jsonapi_meta:    DEFAULT_JSONAPI_META,
-        jsonapi_object:  DEFAULT_JSONAPI_OBJECT,
+        jsonapi_links: DEFAULT_JSONAPI_LINKS,
+        jsonapi_meta: DEFAULT_JSONAPI_META,
+        jsonapi_object: DEFAULT_JSONAPI_OBJECT,
         jsonapi_pagination: DEFAULT_JSONAPI_PAGINATION,
+        jsonapi_payload_malformed: DEFAULT_JSONAPI_PAYLOAD_MALFORMED,
         logger: DEFAULT_LOGGER
       }.freeze
 
