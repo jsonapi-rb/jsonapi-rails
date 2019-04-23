@@ -6,12 +6,20 @@ module Jsonapi
     # TODO(beauby): Implement versioning.
 
     def copy_serializable_file
+      fail "#{class_name} model not found." unless model_exists?
+
       template 'serializable.rb.erb',
                File.join('app/serializable', class_path,
                          "#{serializable_file_name}.rb")
     end
 
     private
+
+    def model_exists?
+      Rails.application.eager_load!
+      models = ApplicationRecord.descendants.map(&:name)
+      !!models.find { |model_name| model_name == class_name }
+    end
 
     def serializable_file_name
       "serializable_#{file_name}"
@@ -22,7 +30,6 @@ module Jsonapi
     end
 
     def model_klass
-      # TODO(beauby): Ensure the model class exists.
       class_name.safe_constantize
     end
 
