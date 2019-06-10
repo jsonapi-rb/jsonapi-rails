@@ -57,7 +57,7 @@ module JSONAPI
               ActiveSupport::Notifications.instrument('render.jsonapi-rails',
                                                       resources: resources,
                                                       options: options) do
-                renderer.render(resources, options, self).to_json
+                JSON.generate(renderer.render(resources, options, self))
               end
             end
           end
