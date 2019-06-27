@@ -49,7 +49,8 @@ module JSONAPI
                     Class.new(JSONAPI::Rails::DeserializableResource, &block)
 
             before_action(options) do |controller|
-              hash = controller.params.to_unsafe_hash[:_jsonapi]
+              hash = controller.params.to_unsafe_hash
+                .with_indifferent_access[:_jsonapi]
               if hash.nil?
                 JSONAPI::Rails.logger.warn do
                   "Unable to deserialize #{key} because no JSON API payload was" \
