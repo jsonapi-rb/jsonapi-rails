@@ -31,9 +31,12 @@ module JSONAPI
       def as_jsonapi
         @errors.keys.flat_map do |key|
           @errors.full_messages_for(key).map.with_index do |message, i|
-            SerializableActiveModelError.new(field: key, message: message,
-              pointer: @reverse_mapping[key], code: @errors.details[key][i][:error])
-              .as_jsonapi
+            SerializableActiveModelError.new(
+              field: key,
+              message: message,
+              pointer: @reverse_mapping[key],
+              code: @errors.details[key][i][:error]
+            ).as_jsonapi
           end
         end
       end
