@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'rails', '~> 5.0'
   spec.add_development_dependency "curses", "~> 1.0"
-  if ENV['RAILS_VERSION'].to_s ~= /^5/
+  if ENV['RAILS_VERSION'].to_s.match /^5/
     spec.add_development_dependency 'sqlite3', '~> 1.3.6'
   else
     spec.add_development_dependency 'sqlite3', '~> 1.4'
