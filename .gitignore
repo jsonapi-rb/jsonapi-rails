@@ -13,6 +13,7 @@
 ## Dummy app temp files:
 /spec/dummy/db
 /spec/dummy/log
+/spec/dummy/tmp
 
 ## Specific to RubyMotion:
 .dat*
