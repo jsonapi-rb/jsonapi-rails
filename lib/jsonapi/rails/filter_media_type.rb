@@ -20,7 +20,7 @@ module JSONAPI
 
       def valid_content_type?(content_type)
         Rack::MediaType.type(content_type) != JSONAPI_MEDIA_TYPE ||
-          Rack::MediaType.params(content_type) == {}
+          content_type == JSONAPI_MEDIA_TYPE
       end
 
       def valid_accept?(accept)

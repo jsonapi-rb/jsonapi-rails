@@ -27,6 +27,14 @@ describe JSONAPI::Rails::FilterMediaType do
     end
   end
 
+  context 'when receiving a bad Content-Type' do
+    it 'fails with 415 Unsupported Media Type' do
+      env = { 'CONTENT_TYPE' => 'application/vnd.api+json, application/vnd.api+json' }
+
+      expect(described_class.new(app).call(env)[0]).to eq(415)
+    end
+  end
+
   context 'when not receiving JSON API in Accept' do
     it 'passes through' do
       env = { 'HTTP_ACCEPT' => 'application/json' }
