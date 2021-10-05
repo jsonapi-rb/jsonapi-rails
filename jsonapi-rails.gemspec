@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec-rails', '~> 3.5'
   spec.add_development_dependency 'with_model',  '~> 2.0'
   spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'pry-byebug'
 end
