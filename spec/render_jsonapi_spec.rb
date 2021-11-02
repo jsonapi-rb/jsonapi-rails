@@ -32,7 +32,7 @@ describe ActionController::Base, '#render', type: :controller do
       end
 
       def user
-        OpenStruct.new(id: 1, name: 'Johnny Cache', dob: Time.new(2021,1,1))
+        OpenStruct.new(id: 1, name: 'Johnny Cache', dob: Time.utc(2021,1,1))
       end
 
       def index
@@ -72,7 +72,7 @@ describe ActionController::Base, '#render', type: :controller do
 
     it 'renders equivalent JSON whether caching or not' do
       expected_response = {
-        "data"=>[{"id"=>"1", "type"=>"users", "attributes"=>{"id"=>1, "name"=>"Johnny Cache", "dob"=>"2021-01-01T00:00:00.000+00:00"}}],
+        "data"=>[{"id"=>"1", "type"=>"users", "attributes"=>{"id"=>1, "name"=>"Johnny Cache", "dob"=>"2021-01-01T00:00:00.000Z"}}],
         "jsonapi"=>{"version"=>"1.0"}
       }
 
