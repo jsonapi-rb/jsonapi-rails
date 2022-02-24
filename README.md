@@ -4,7 +4,7 @@ Rails integration for [jsonapi-rb](http://jsonapi-rb.org).
 ## Status
 
 [![Gem Version](https://badge.fury.io/rb/jsonapi-rails.svg)](https://badge.fury.io/rb/jsonapi-rails)
-[![Build Status](https://secure.travis-ci.org/jsonapi-rb/jsonapi-rails.svg?branch=master)](http://travis-ci.org/jsonapi-rb/jsonapi-rails?branch=master)
+[![Build Status](https://github.com/jsonapi-rb/jsonapi-rails/actions/workflows/ci.yml/badge.svg)](https://github.com/jsonapi-rb/jsonapi-rails/actions/workflows/ci.yml/badge.svg)
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/jsonapi-rb/Lobby)
 
 ## Resources
