@@ -32,7 +32,7 @@ module JSONAPI
                 .select { |m| Rack::MediaType.type(m) == JSONAPI_MEDIA_TYPE }
 
         jsonapi_media_types.empty? ||
-          jsonapi_media_types.any? { |m| Rack::MediaType.params(m) == {} }
+          jsonapi_media_types.any? { |m| Rack::MediaType.params(m).empty? }
       end
     end
   end
