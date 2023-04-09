@@ -11,6 +11,8 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/jsonapi-rb/jsonapi-rails'
   spec.license       = 'MIT'
 
+  spec.metadata      = { 'rubygems_mfa_required' => 'true' }
+
   spec.files         = Dir['README.md', 'lib/**/*']
   spec.require_path  = 'lib'
 
