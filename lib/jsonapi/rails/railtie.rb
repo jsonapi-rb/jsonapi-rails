@@ -39,11 +39,7 @@ module JSONAPI
       end
 
       def register_parameter_parser
-        if ::Rails::VERSION::MAJOR >= 5
-          ActionDispatch::Request.parameter_parsers[:jsonapi] = PARSER
-        else
-          ActionDispatch::ParamsParser::DEFAULT_PARSERS[Mime[:jsonapi]] = PARSER
-        end
+        ActionDispatch::Request.parameter_parsers[:jsonapi] = PARSER
       end
 
       # rubocop:disable Metrics/MethodLength
