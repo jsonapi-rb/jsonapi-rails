@@ -17,7 +17,7 @@ describe ActionController::Base, '#render', type: :controller do
     {
       'errors' => [
         {
-          'detail' => 'Name can\'t be blank',
+          'detail' => "Name #{I18n.t('errors.messages.blank')}",
           'title' => 'Invalid name',
           'source' => { 'pointer' => '/data/attributes/name' }
         },
@@ -64,7 +64,7 @@ describe ActionController::Base, '#render', type: :controller do
       def create
         errors = [
           {
-            detail: 'Name can\'t be blank',
+            detail: "Name #{I18n.t('errors.messages.blank')}",
             title: 'Invalid name',
             source: { pointer: '/data/attributes/name' }
           },
