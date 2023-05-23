@@ -23,6 +23,7 @@ module JSONAPI
       initializer 'jsonapi-rails.init' do |app|
         register_mime_type
         register_parameter_parser
+        register_encoder
         register_renderers
         ActiveSupport.on_load(:action_controller) do
           require 'jsonapi/rails/controller'
@@ -40,6 +41,14 @@ module JSONAPI
 
       def register_parameter_parser
         ActionDispatch::Request.parameter_parsers[:jsonapi] = PARSER
+      end
+
+      def register_encoder
+        ActiveSupport.on_load(:action_dispatch_integration_test) do
+          register_encoder :jsonapi,
+            param_encoder: -> (params) { params.to_json },
+            response_parser: -> (body) { JSON.parse(body) }
+        end
       end
 
       # rubocop:disable Metrics/MethodLength
