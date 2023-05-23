@@ -49,7 +49,9 @@ module JSONAPI
 
       def register_encoder
         ActiveSupport.on_load(:action_dispatch_integration_test) do
-          register_encoder :jsonapi, response_parser: ->(body) { JSON.parse(body) }
+          register_encoder :jsonapi,
+            param_encoder: -> (params) { params.to_json },
+            response_parser: -> (body) { JSON.parse(body) }
         end
       end
 
