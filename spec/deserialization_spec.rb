@@ -25,7 +25,8 @@ describe ActionController::Base, '.deserializable_resource',
     it 'makes the deserialized resource available in params' do
       post :create, params: payload
 
-      expected = { 'type' => 'users', 'name' => 'Lucas' }
+      expected = ActionController::Parameters.new('type' => 'users',
+                                                  'name' => 'Lucas')
       expect(controller.params[:user]).to eq(expected)
     end
 
@@ -54,7 +55,8 @@ describe ActionController::Base, '.deserializable_resource',
     it 'makes the deserialized resource available in params' do
       post :create, params: payload
 
-      expected = { 'type' => 'users', 'first_name' => 'Lucas' }
+      expected = ActionController::Parameters.new('type' => 'users',
+                                                  'first_name' => 'Lucas')
       expect(controller.params[:user]).to eq(expected)
     end
 
@@ -81,7 +83,8 @@ describe ActionController::Base, '.deserializable_resource',
     it 'makes the deserialized resource available in params' do
       post :create, params: payload
 
-      expected = { 'type' => 'users', 'Name' => 'Lucas' }
+      expected = ActionController::Parameters.new('type' => 'users',
+                                                  'Name' => 'Lucas')
       expect(controller.params[:user]).to eq(expected)
     end
 
