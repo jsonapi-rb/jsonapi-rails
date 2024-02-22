@@ -6,7 +6,7 @@ rails =
   when 'main'
     { github: 'rails/rails' }
   when 'default'
-    '>= 5.0'
+    '>= 6.0'
   else
     "~> #{ENV['RAILS_VERSION']}"
   end
