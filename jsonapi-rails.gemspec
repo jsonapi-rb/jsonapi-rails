@@ -16,6 +16,8 @@ Gem::Specification.new do |spec|
   spec.files         = Dir['README.md', 'lib/**/*']
   spec.require_path  = 'lib'
 
+  spec.required_ruby_version = '>= 2.5.0'
+
   spec.add_dependency 'jsonapi-rb', '~> 0.5.0'
   spec.add_dependency 'jsonapi-parser', '~> 0.1.0'
 
