@@ -20,6 +20,8 @@ describe ActionController::Base, '#render', type: :controller do
 
   context 'when using a cache' do
     controller do
+      User = Struct.new(:id, :name, :dob)
+
       def serializer
         Class.new(JSONAPI::Serializable::Resource) do
           type 'users'
@@ -32,17 +34,17 @@ describe ActionController::Base, '#render', type: :controller do
       end
 
       def user
-        OpenStruct.new(id: 1, name: 'Johnny Cache', dob: Time.utc(2021,1,1))
+        User.new(1, 'Johnny Cache', Time.utc(2021,1,1))
       end
 
       def index
         render jsonapi: [user],
-               class: { OpenStruct: serializer }
+               class: { User: serializer }
       end
 
       def index_with_caching
         render jsonapi: [user],
-               class: { OpenStruct: serializer },
+               class: { User: serializer },
                cache: Rails.cache
       end
     end
