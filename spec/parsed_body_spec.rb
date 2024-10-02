@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ActionController::Base, type: :controller, if: Rails.version >= '6.0' do
+describe ActionController::Base, type: :controller do
   controller do
     def index
       render jsonapi: nil
